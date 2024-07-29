@@ -52,16 +52,12 @@ namespace SlotMachine.Business.Domain.CoinSlot
             return true;
         }
 
-        public bool TryDecreaseAll()
+        public (CoinType, int) TakeCoins()
         {
-            if (NumCoins <= 0)
-            {
-                return false;
-            }
-
+            var coins = NumCoins;
             NumCoins = 0;
 
-            return true;
+            return (CurrentCoinType, coins);
         }
 
         public void ReturnCoins()

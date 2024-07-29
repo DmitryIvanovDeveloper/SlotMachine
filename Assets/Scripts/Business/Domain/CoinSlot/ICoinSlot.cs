@@ -6,7 +6,7 @@ namespace SlotMachine.Business.Domain.CoinSlot
     {
         bool TryEncrease(CoinType coinType);
         bool HasCoins(CoinType coinType);
-        bool TryDecreaseAll();
+        (CoinType, int) TakeCoins();
         void ReturnCoins();
     }
 }

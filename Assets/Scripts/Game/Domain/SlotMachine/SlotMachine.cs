@@ -27,12 +27,14 @@ namespace SlotMachine.Game.Domain.SlotMachine
         [SerializeField]
         private Image _shapeThree;
 
-        private SlotMachinePlayEvent _slotMachinePlayEvent;
-        private ISlotMachineInfo _slotMachineInfo;
-        private SlotMachineEventUpdateViewHandler _slotMachineEventUpdateViewHandler;
         private float _elapseTime;
         private bool _isPlay;
 
+
+        private SlotMachinePlayEvent _slotMachinePlayEvent;
+        private ISlotMachineInfo _slotMachineInfo;
+        private SlotMachineEventUpdateViewHandler _slotMachineEventUpdateViewHandler;
+  
         [Inject]
         public void Construct(ISlotMachineInfo slotMachineInfo,
             SlotMachinePlayEvent slotMachinePlayEvent,
