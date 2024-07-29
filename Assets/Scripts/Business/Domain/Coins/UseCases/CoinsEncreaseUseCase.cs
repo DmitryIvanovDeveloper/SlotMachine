@@ -1,4 +1,6 @@
-﻿namespace SlotMachine.Business.Domain.Coins.UseCases
+﻿using SlotMachine.Business.Common;
+
+namespace SlotMachine.Business.Domain.Coins.UseCases
 {
     public class CoinsEncreaseUseCase
     {
@@ -11,9 +13,9 @@
             _coinsSaveUseCase = coinsSaveUseCase;
         }
 
-        public void Execute()
+        public void Execute(CoinType coinType)
         {
-            _coins.Encrease();
+            _coins.Encrease(coinType);
             _coinsSaveUseCase.Execute();
         }
     }

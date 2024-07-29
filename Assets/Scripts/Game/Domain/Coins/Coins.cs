@@ -6,6 +6,7 @@ using SlotMachine.Game.Domain.Coins.Events;
 using SlotMachine.Business.Domain.Coins;
 using System.Collections;
 using SlotMachine.Business.Domain.SlotMachine;
+using SlotMachine.Business.Common;
 
 namespace SlotMachine.Game.Domain.Coins
 {
@@ -30,34 +31,36 @@ namespace SlotMachine.Game.Domain.Coins
 
         public void UpdateView()
         {
-            if (_numCoins > _coinsInfo.Num)
+            var numSilverCoins = _coinsInfo.NumCoinsByType[CoinType.Silver];
+
+            if (_numCoins > numSilverCoins)
             {
-                _numCoins = _coinsInfo.Num;
+                _numCoins = numSilverCoins;
                 _coins.text = $"{_numCoins}";
                 return;
             }
 
-            if (_numCoins + _coinsInfo.NumCoinsOnTap == _coinsInfo.Num)
+            if (_numCoins + _coinsInfo.NumCoinsOnTap == numSilverCoins)
             {
-                _numCoins = _coinsInfo.Num;
+                _numCoins = numSilverCoins;
                 _coins.text = $"{_numCoins}";
                 return;
             }
 
-            StartCoroutine(EcreaseCoinsWithDelay());
+             StartCoroutine(EcreaseCoinsWithDelay());
         }
 
         private IEnumerator EcreaseCoinsWithDelay()
         {
             yield return new WaitForSeconds(_slotMachineInfo.ShapeThreeShowInSeconds);
 
-            _numCoins = _coinsInfo.Num;
+            _numCoins = _coinsInfo.NumCoinsByType[CoinType.Silver];
             _coins.text = $"{_numCoins}";
         }
 
         public async void OnTap()
         {
-            await _coinsOnTapEvent.Notify();
+            await _coinsOnTapEvent.Notify(CoinType.Silver);
         }
     }
 }

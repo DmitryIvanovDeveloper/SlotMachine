@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using SlotMachine.Business.Common;
 using SlotMachine.Business.Domain.Coins;
+using SlotMachine.Business.Domain.CoinSlot;
 
 namespace SlotMachine.Business.Domain.SlotMachine
 {
@@ -25,12 +26,25 @@ namespace SlotMachine.Business.Domain.SlotMachine
             { (ShapeType.Seven, ShapeType.Seven, ShapeType.Seven), 10000 },
         };
 
+        private Dictionary<CoinType, int> NumCoinsToPlayByType = new Dictionary<CoinType, int>()
+        {
+            { CoinType.Silver, 1 },
+            { CoinType.Golden, 1 },
+        };
+
         private System.Random _random = new System.Random();
         private Array _values = Enum.GetValues(typeof(ShapeType));
 
-        public bool Play(ICoins coins)
+        private ICoinSlot _coinSlot;
+
+        public SlotMachine(ICoinSlot coinSlot)
         {
-            var isSuccess = coins.TryDecrease(NumCoinsToPlay);
+            _coinSlot = coinSlot;
+        }
+
+        public bool Play()
+        {
+            var isSuccess = _coinSlot.TryDecreaseAll();
             if (!isSuccess)
             {
                 return false;

@@ -1,24 +1,25 @@
 ﻿using System.Threading.Tasks;
+using SlotMachine.Business.Common;
 
 namespace SlotMachine.Game.Domain.Coins.Events
 {
     public class CoinsOnTapEvent
     {
         private CoinsOnTapEventExecuteUseCaseHandler _coinsOnTapEventExecuteUseCaseHandler;
-        private CoinsOnTapEventUpdateViewHandler _coinsOnTapEventUpdateViewHandler;
+        private CoinsEventUpdateViewHandler _coinsOnTapEventUpdateViewHandler;
 
         public CoinsOnTapEvent(
             CoinsOnTapEventExecuteUseCaseHandler coinsOnTapEventExecuteUseCaseHandler,
-            CoinsOnTapEventUpdateViewHandler coinsOnTapEventUpdateViewHandler
+            CoinsEventUpdateViewHandler coinsOnTapEventUpdateViewHandler
         )
         {
             _coinsOnTapEventExecuteUseCaseHandler = coinsOnTapEventExecuteUseCaseHandler;
             _coinsOnTapEventUpdateViewHandler = coinsOnTapEventUpdateViewHandler;
         }
 
-        public Task Notify()
+        public Task Notify(CoinType coinType)
         {
-            _coinsOnTapEventExecuteUseCaseHandler.Handle();
+            _coinsOnTapEventExecuteUseCaseHandler.Handle(coinType);
             _coinsOnTapEventUpdateViewHandler.Handle();
 
             return Task.CompletedTask;

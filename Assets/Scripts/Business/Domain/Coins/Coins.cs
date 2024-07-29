@@ -1,30 +1,39 @@
-﻿namespace SlotMachine.Business.Domain.Coins
+﻿using System.Collections.Generic;
+using SlotMachine.Business.Common;
+using SlotMachine.Business.Domain.CoinSlot;
+using UnityEngine;
+
+namespace SlotMachine.Business.Domain.Coins
 {
     public class Coins : ICoins, ICoinsInfo
     {
+        public Dictionary<CoinType, int> NumCoinsByType { get; private set; } = new Dictionary<CoinType, int>()
+        {
+            { CoinType.Golden, 0 },
+            { CoinType.Silver, 0 },
+        };
+
         public int NumCoinsOnTap { get; private set; } = 1;
 
-        public int Num { get; private set; }
-
-        public void Encrease()
+        public void Encrease(CoinType coinType)
         {
-            Num += NumCoinsOnTap;
+            NumCoinsByType[coinType] += 1;
         }
 
-        public void Add(int num)
+        public void Add(CoinType coinType, int num)
         {
-            Num += num;
+            NumCoinsByType[coinType] += num;
         }
 
-        public bool TryDecrease(int num)
+        public bool TryDecrease(CoinType coinType, int num)
         {
-            if (Num - num < 0)
+            if (!NumCoinsByType.ContainsKey(coinType) || NumCoinsByType[coinType] <= 0)
             {
                 return false;
             }
 
-
-            Num -= num;
+            NumCoinsByType[coinType] -= num;
+            Debug.Log(NumCoinsByType[coinType]);
 
             return true;
         }

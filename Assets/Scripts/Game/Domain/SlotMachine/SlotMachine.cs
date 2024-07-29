@@ -29,15 +29,18 @@ namespace SlotMachine.Game.Domain.SlotMachine
 
         private SlotMachinePlayEvent _slotMachinePlayEvent;
         private ISlotMachineInfo _slotMachineInfo;
-
+        private SlotMachineEventUpdateViewHandler _slotMachineEventUpdateViewHandler;
         private float _elapseTime;
         private bool _isPlay;
 
         [Inject]
-        public void Construct(ISlotMachineInfo slotMachineInfo , SlotMachinePlayEvent slotMachinePlayEvent)
+        public void Construct(ISlotMachineInfo slotMachineInfo,
+            SlotMachinePlayEvent slotMachinePlayEvent,
+            SlotMachineEventUpdateViewHandler slotMachineEventUpdateViewHandler)
         {
             _slotMachinePlayEvent = slotMachinePlayEvent;
             _slotMachineInfo = slotMachineInfo;
+            _slotMachineEventUpdateViewHandler = slotMachineEventUpdateViewHandler;
         }
 
         public void StartGame()
@@ -142,6 +145,8 @@ namespace SlotMachine.Game.Domain.SlotMachine
             }
 
             _shapeThree.sprite = GetSprite(_slotMachineInfo.ShapeThree);
+
+            _slotMachineEventUpdateViewHandler.Handle();
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-
+using SlotMachine.Business.Common;
 using SlotMachine.Business.Domain.Coins.UseCases;
 
 namespace SlotMachine.Game.Domain.Coins.Events
@@ -13,9 +13,9 @@ namespace SlotMachine.Game.Domain.Coins.Events
             _coinsEncreaseUseCase = coinsEncreaseUseCase;
         }
 
-        public Task Handle()
+        public Task Handle(CoinType coinType)
         {
-            _coinsEncreaseUseCase.Execute();
+            _coinsEncreaseUseCase.Execute(coinType);
             return Task.CompletedTask;
         }
     }

@@ -1,8 +1,11 @@
-﻿namespace SlotMachine.Business.Domain.Coins
+﻿using SlotMachine.Business.Common;
+using System.Collections.Generic;
+
+namespace SlotMachine.Business.Domain.Coins
 {
     public interface ICoinsInfo
     {
-        int Num { get; }
+        Dictionary<CoinType, int> NumCoinsByType { get; }
         int NumCoinsOnTap { get; }
     }
 }

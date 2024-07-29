@@ -1,6 +1,6 @@
-﻿using SlotMachine.Business.Domain.Coins;
+﻿using SlotMachine.Business.Common;
+using SlotMachine.Business.Domain.Coins;
 using SlotMachine.Business.Domain.Coins.UseCases;
-using SlotMachine.Game.Domain.Coins;
 
 namespace SlotMachine.Business.Domain.SlotMachine.UseCase
 {
@@ -27,13 +27,13 @@ namespace SlotMachine.Business.Domain.SlotMachine.UseCase
 
         public bool Execute()
         {
-            var canPlay = _slotMachine.Play(_coins);
+            var canPlay = _slotMachine.Play();
             if (!canPlay)
             {
                 return canPlay;
             }
 
-            _coinsAddUseCase.Execute(_slotMachineInfo.GetPoints());
+            _coinsAddUseCase.Execute(CoinType.Silver, _slotMachineInfo.GetPoints());
 
             return canPlay;
         }
