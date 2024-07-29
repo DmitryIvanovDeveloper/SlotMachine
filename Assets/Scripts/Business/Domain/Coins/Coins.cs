@@ -33,7 +33,6 @@ namespace SlotMachine.Business.Domain.Coins
             }
 
             NumCoinsByType[coinType] -= num;
-            Debug.Log(NumCoinsByType[coinType]);
 
             return true;
         }

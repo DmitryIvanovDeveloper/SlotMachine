@@ -14,6 +14,12 @@ namespace SlotMachine.Game.Domain.Coins
     {
         private int _numCoins;
 
+
+        [SerializeField]
+        private GameObject _earnPrefab;
+        [SerializeField]
+        private Transform _earnAnimations;
+
         [SerializeField]
         private TextMeshProUGUI _coins;
 
@@ -61,6 +67,9 @@ namespace SlotMachine.Game.Domain.Coins
         public async void OnTap()
         {
             await _coinsOnTapEvent.Notify(CoinType.Silver);
+
+            var earnGameObject = Instantiate(_earnPrefab, _earnAnimations);
+            earnGameObject.transform.position = Input.mousePosition;
         }
     }
 }
