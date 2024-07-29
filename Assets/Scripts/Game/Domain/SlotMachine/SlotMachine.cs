@@ -15,6 +15,12 @@ namespace SlotMachine.Game.Domain.SlotMachine
     public class SlotMachine : MonoBehaviour
     {
         [SerializeField]
+        private List<AudioClip> _slotSounds;
+
+        [SerializeField]
+        private AudioSource _audioSource;
+
+        [SerializeField]
         private GameObject _congratulation;
 
         [SerializeField]
@@ -81,6 +87,7 @@ namespace SlotMachine.Game.Domain.SlotMachine
                     return;
                 }
 
+
                 StartCoroutine(ShowCongratulation());
                 return;
             }
@@ -121,6 +128,8 @@ namespace SlotMachine.Game.Domain.SlotMachine
             }
 
             _shapeOne.sprite = GetSprite(_slotMachineInfo.ShapeOne);
+
+            _audioSource.PlayOneShot(_slotSounds[0]);
         }
 
         private IEnumerator ShapeTwoRandomImage()
@@ -133,7 +142,10 @@ namespace SlotMachine.Game.Domain.SlotMachine
                 _shapeTwo.sprite = GetSprite(_shapes[random.Next(_shapes.Count())].ShapeType);
             }
 
+
             _shapeTwo.sprite = GetSprite(_slotMachineInfo.ShapeTwo);
+
+            _audioSource.PlayOneShot(_slotSounds[1]);
         }
 
         private IEnumerator ShapeThreeRandomImage()
@@ -149,6 +161,13 @@ namespace SlotMachine.Game.Domain.SlotMachine
             _shapeThree.sprite = GetSprite(_slotMachineInfo.ShapeThree);
 
             _slotMachineEventUpdateViewHandler.Handle();
+
+            _audioSource.PlayOneShot(_slotSounds[2]);
+        }
+
+        private IEnumerator StartSlotsAnimations()
+        {
+            yield return new WaitForSeconds(2);
         }
     }
 }

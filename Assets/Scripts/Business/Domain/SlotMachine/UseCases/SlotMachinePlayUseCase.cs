@@ -1,6 +1,7 @@
 ﻿using SlotMachine.Business.Common;
 using SlotMachine.Business.Domain.Coins;
 using SlotMachine.Business.Domain.Coins.UseCases;
+using SlotMachine.Business.Domain.State;
 
 namespace SlotMachine.Business.Domain.SlotMachine.UseCase
 {
@@ -11,11 +12,13 @@ namespace SlotMachine.Business.Domain.SlotMachine.UseCase
 
         private ICoins _coins;
         private CoinsAddUseCase _coinsAddUseCase;
+        private IStateInfo _stateInfo;
 
         public SlotMachinePlayUseCase(
             ISlotMachine slotMachine,
             ISlotMachineInfo slotMachineInfo,
             ICoins coins,
+            IStateInfo stateInfo,
             CoinsAddUseCase coinsAddUseCase
         )
         {
@@ -23,10 +26,16 @@ namespace SlotMachine.Business.Domain.SlotMachine.UseCase
             _slotMachineInfo = slotMachineInfo;
             _coins = coins;
             _coinsAddUseCase = coinsAddUseCase;
+            _stateInfo = stateInfo;
         }
 
         public bool Execute()
         {
+            if (_stateInfo.CurrentStateType == StateType.Broken)
+            {
+                return false;
+            }
+
             var canPlay = _slotMachine.Play();
             if (!canPlay)
             {

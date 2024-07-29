@@ -8,9 +8,10 @@ namespace SlotMachine.Business.Domain.SlotMachine
 {
     public class SlotMachine : ISlotMachine, ISlotMachineInfo
     {
+      
         private int _numPlayedCoins = 0;
         public int NumCoinsToPlay { get; private set; } = 10;
-        private CoinType _plyedCoinType;
+        private CoinType _playedCoinType;
 
         public ShapeType ShapeOne { get; private set; }
         public ShapeType ShapeTwo { get; private set; }
@@ -62,6 +63,7 @@ namespace SlotMachine.Business.Domain.SlotMachine
             return true;
         }
 
+
         public int GetPoints()
         {
             if (!_pointsByShapes.ContainsKey((ShapeOne, ShapeTwo, ShapeThree)))
@@ -69,7 +71,7 @@ namespace SlotMachine.Business.Domain.SlotMachine
                 return 0;
             }
 
-            return _pointsByShapes[(ShapeOne, ShapeTwo, ShapeThree)].Item2 * NumCoinsToPlayByType[_plyedCoinType];
+            return _pointsByShapes[(ShapeOne, ShapeTwo, ShapeThree)].Item2 * NumCoinsToPlayByType[_playedCoinType];
         }
     }
 }

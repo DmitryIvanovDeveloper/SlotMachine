@@ -13,6 +13,11 @@ namespace SlotMachine.Game.Domain.CoinSlot
 {
     public class CoinSlot : MonoBehaviour
     {
+        private int _numCoins;
+
+        [SerializeField]
+        private AudioSource _audioSource;
+
         [SerializeField]
         private List<Sprite> _coins;
 
@@ -44,6 +49,12 @@ namespace SlotMachine.Game.Domain.CoinSlot
                 : _coins[1]
             ;
 
+            if (_numCoins < _coinSlotInfo.NumCoins)
+            {
+                _audioSource.PlayOneShot(_audioSource.clip);
+            }
+
+            _numCoins = _coinSlotInfo.NumCoins;
             _num.text = $"{_coinSlotInfo.NumCoins}";
         }
 

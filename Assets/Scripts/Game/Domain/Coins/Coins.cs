@@ -16,9 +16,8 @@ namespace SlotMachine.Game.Domain.Coins
 
 
         [SerializeField]
-        private GameObject _earnPrefab;
-        [SerializeField]
-        private Transform _earnAnimations;
+        private AudioSource _audioSource;
+
 
         [SerializeField]
         private TextMeshProUGUI _coins;
@@ -39,6 +38,11 @@ namespace SlotMachine.Game.Domain.Coins
         {
             var numSilverCoins = _coinsInfo.NumCoinsByType[CoinType.Silver];
 
+            if (numSilverCoins > _numCoins)
+            {
+                _audioSource.PlayOneShot(_audioSource.clip);
+            }
+
             if (_numCoins > numSilverCoins)
             {
                 _numCoins = numSilverCoins;
@@ -50,26 +54,25 @@ namespace SlotMachine.Game.Domain.Coins
             {
                 _numCoins = numSilverCoins;
                 _coins.text = $"{_numCoins}";
+
                 return;
             }
 
-             StartCoroutine(EcreaseCoinsWithDelay());
+            _numCoins = numSilverCoins;
+
+            StartCoroutine(EcreaseCoinsWithDelay());
         }
 
         private IEnumerator EcreaseCoinsWithDelay()
         {
             yield return new WaitForSeconds(_slotMachineInfo.ShapeThreeShowInSeconds);
 
-            _numCoins = _coinsInfo.NumCoinsByType[CoinType.Silver];
             _coins.text = $"{_numCoins}";
         }
 
         public async void OnTap()
         {
             await _coinsOnTapEvent.Notify(CoinType.Silver);
-
-            var earnGameObject = Instantiate(_earnPrefab, _earnAnimations);
-            earnGameObject.transform.position = Input.mousePosition;
         }
     }
 }

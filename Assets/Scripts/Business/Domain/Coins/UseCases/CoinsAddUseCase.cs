@@ -1,4 +1,5 @@
 ﻿using SlotMachine.Business.Common;
+using UnityEngine;
 
 namespace SlotMachine.Business.Domain.Coins.UseCases
 {
@@ -15,6 +16,7 @@ namespace SlotMachine.Business.Domain.Coins.UseCases
 
         public void Execute(CoinType coinType, int num)
         {
+            Debug.Log(coinType);
             _coins.Add(coinType, num);
             _coinsSaveUseCase.Execute();
         }

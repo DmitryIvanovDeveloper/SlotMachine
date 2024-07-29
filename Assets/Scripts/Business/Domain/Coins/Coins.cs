@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
+
 using SlotMachine.Business.Common;
-using SlotMachine.Business.Domain.CoinSlot;
-using UnityEngine;
 
 namespace SlotMachine.Business.Domain.Coins
 {

@@ -11,7 +11,6 @@ public class Vibration : MonoBehaviour
 #if !UNITY_EDITOR && UNITY_WEBGL
             Vibrate(170);
 #else
-            Debug.Log("Simulate vibration");
 #endif
     }
 }
