@@ -24,6 +24,8 @@ namespace SlotMachine.Game.Domain.State
 
         [SerializeField]
         private AudioClip _lightAudioClip;
+        [SerializeField]
+        private AudioClip _brokenSound;
 
         [SerializeField]
         private AudioSource _audioSource;
@@ -77,10 +79,12 @@ namespace SlotMachine.Game.Domain.State
             {
                 _audioSource.Play();
             }
-            else
+            if (_stateInfo.CurrentStateType == Business.Common.StateType.Broken)
             {
+                _audioSource.PlayOneShot(_brokenSound);
                 _audioSource.Stop();
             }
+
 
             _healthSlider.fillAmount = (float)_stateInfo.HealthInPercentage / 100f;
 

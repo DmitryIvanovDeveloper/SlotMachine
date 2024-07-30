@@ -23,7 +23,7 @@ namespace SlotMachine.Game.Common
             _coinSlotEvent = coinSlotEvent;
         }
 
-        public void OnPointerDown()
+        public void OnMouseDown()
         {
             clicked++;
             if (clicked == 1)
