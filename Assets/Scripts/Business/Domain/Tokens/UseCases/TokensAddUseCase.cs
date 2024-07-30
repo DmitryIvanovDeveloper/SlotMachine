@@ -1,5 +1,6 @@
 ﻿
 using SlotMachine.Business.Common;
+using SlotMachine.Business.Domain.Inventory;
 using SlotMachine.Business.Domain.State;
 
 namespace SlotMachine.Business.Domain.Tokens.UseCase
@@ -8,11 +9,13 @@ namespace SlotMachine.Business.Domain.Tokens.UseCase
     {
         private ITokens _tokens;
         private IStateInfo _stateInfo;
+        private IInventoryInfo _inventoryInfo;
 
-        public TokensAddUseCase(ITokens tokens, IStateInfo stateInfo)
+        public TokensAddUseCase(ITokens tokens, IStateInfo stateInfo, IInventoryInfo inventoryInfo)
         {
             _tokens = tokens;
             _stateInfo = stateInfo;
+            _inventoryInfo = inventoryInfo;
         }
 
         public void Execute()
@@ -22,7 +25,7 @@ namespace SlotMachine.Business.Domain.Tokens.UseCase
                 return;
             }
 
-            _tokens.Add(1);
+            _tokens.Add(_inventoryInfo.SelectedWeapon.GetDamage());
         }
     }
 }

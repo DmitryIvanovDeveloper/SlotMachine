@@ -18,6 +18,8 @@ using SlotMachine.Game.Domain.Tokens.Events;
 using SlotMachine.Business.Domain.State;
 using SlotMachine.Business.Domain.State.UseCase;
 using SlotMachine.Game.Domain.State.Events;
+using SlotMachine.Business.Domain.Inventory;
+using SlotMachine.Game.Domain.Inventory.Events;
 
 namespace SlotMachine.Infrastructure.Bootstrap
 {
@@ -37,6 +39,7 @@ namespace SlotMachine.Infrastructure.Bootstrap
             Container.Bind(typeof(ICoinSlot), typeof(ICoinSlotInfo)).To<CoinSlot>().AsSingle();
             Container.Bind(typeof(ITokens), typeof(ITokensInfo)).To<Tokens>().AsSingle();
             Container.Bind(typeof(IState), typeof(IStateInfo)).To<State>().AsSingle();
+            Container.Bind(typeof(IInventory), typeof(IInventoryInfo)).To<Inventory>().AsSingle();
 
             Container.Bind<IRepository>().To<Repository.Repository>().AsSingle();
             Container.Bind<ILocalStorageService>().To<LocalStorageService>().AsSingle();
@@ -78,6 +81,9 @@ namespace SlotMachine.Infrastructure.Bootstrap
 
             Container.Bind<StateRepairEvent>().AsSingle();
             Container.Bind<StateRepairEventExecuteUseCaseHandler>().AsSingle();
+
+            Container.Bind<InventorySelectWeaponEvent>().AsSingle();
+            Container.Bind<InventorySelectWeaponEventExecuteUseCaseHandler>().AsSingle();
         }
 
         private void BindUseCases()
@@ -101,7 +107,9 @@ namespace SlotMachine.Infrastructure.Bootstrap
             //// State
             Container.Bind<StateAddDamageUseCase>().AsSingle();
             Container.Bind<StateRepairUseCase>().AsSingle();
-            
+
+            //// Inventory
+            Container.Bind<InventorySelectWeaponUseCase>().AsSingle();
         }
     }
 }

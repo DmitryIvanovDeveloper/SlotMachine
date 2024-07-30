@@ -63,7 +63,7 @@ namespace SlotMachine.Game.Domain.CoinSlot
             _coinSlotReturnCoinEvent.Notify();
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private void OnTriggerEnter2D(Collider2D collision)
         {
             var coin = collision.transform.GetComponentOrThrow<Coin>();
             _coinSlotEvent.Notify(coin.CoinType);

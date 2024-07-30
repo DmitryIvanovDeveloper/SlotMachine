@@ -8,11 +8,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.Collections;
+using SlotMachine.Game.Util.Extensions;
+using TMPro;
+using SlotMachine.Business.Domain.Inventory;
 
 namespace SlotMachine.Game.Domain.State
 {
+    //TODO: Rename to Health
     public class State : MonoBehaviour
     {
+        [SerializeField]
+        private Image _healthSlider;
         [SerializeField]
         private GameObject _underRepair;
 
@@ -38,13 +44,18 @@ namespace SlotMachine.Game.Domain.State
         private IStateInfo _stateInfo;
         private StateAddDamageEvent _stateAddDamageEvent;
         private StateRepairEvent _stateRepairEvent;
-
+        private IInventoryInfo _inventoryInfo;
         [Inject]
-        public void Construct(IStateInfo stateInfo, StateAddDamageEvent stateAddDamageEvent, StateRepairEvent stateRepairEvent)
+        public void Construct(
+            IStateInfo stateInfo,
+            IInventoryInfo inventoryInfo,
+            StateAddDamageEvent stateAddDamageEvent,
+            StateRepairEvent stateRepairEvent)
         {
             _stateInfo = stateInfo;
             _stateAddDamageEvent = stateAddDamageEvent;
             _stateRepairEvent = stateRepairEvent;
+            _inventoryInfo = inventoryInfo;
         }
 
         private void Start()
@@ -62,7 +73,7 @@ namespace SlotMachine.Game.Domain.State
 
             _state.sprite = stateImage.Image;
 
-            if (_stateInfo.CurrentStateType == Business.Common.StateType.HalfBroken && !_audioSource.isPlaying)
+            if (_stateInfo.CurrentStateType == Business.Common.StateType.HalfBroken)
             {
                 _audioSource.Play();
             }
@@ -71,6 +82,8 @@ namespace SlotMachine.Game.Domain.State
                 _audioSource.Stop();
             }
 
+            _healthSlider.fillAmount = (float)_stateInfo.HealthInPercentage / 100f;
+
             UnderRepair();
         }
 
@@ -78,10 +91,15 @@ namespace SlotMachine.Game.Domain.State
         {
             await _stateAddDamageEvent.Notify();
 
-            var earnGameObject = Instantiate(_hitPrefab, _hits);
-            earnGameObject.transform.position = Input.mousePosition;
+            var hitGameObject = Instantiate(_hitPrefab, _hits);
 
-            Debug.Log(Input.mousePosition.y);
+            var num = hitGameObject
+                .FindChildOrThrow("Num")
+                .GetComponentOrThrow<TextMeshProUGUI>()
+            ;
+
+            num.text = $"+ {_inventoryInfo.SelectedWeapon.GetDamage()}";
+            hitGameObject.transform.localPosition = Input.mousePosition;
         }
 
         private void UnderRepair()
@@ -104,7 +122,7 @@ namespace SlotMachine.Game.Domain.State
         {
             yield return new WaitForSeconds(1);
             _stateRepairEvent.Notify();
-            _slider.fillAmount = (float)_stateInfo.CurrentRepairInPercentage / 100f;
+            _slider.fillAmount = (float)_stateInfo.HealthInPercentage / 100f;
         }
     }
 }

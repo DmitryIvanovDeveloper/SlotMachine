@@ -16,7 +16,6 @@ namespace SlotMachine.Business.Domain.Coins.UseCases
 
         public void Execute(CoinType coinType, int num)
         {
-            Debug.Log(coinType);
             _coins.Add(coinType, num);
             _coinsSaveUseCase.Execute();
         }
