@@ -14,7 +14,7 @@ namespace SlotMachine.Business.Domain.State
         public int LastDamage { get; private set; }
         private DateTime _brokenAt = DateTime.UtcNow;
 
-        private double _maxHealth = 100;
+        private double _maxHealth = 1000;
 
         private int _totalHits = 0;
 
@@ -62,7 +62,7 @@ namespace SlotMachine.Business.Domain.State
                 _brokenAt = DateTime.UtcNow;
             }
 
-            if (_random.Next(1, 10) == 2)
+            if (_random.Next(1, 30) == 2)
             {
                 _coinsAddUseCase.Execute(CoinType.Silver, _random.Next(1, _inventoryInfo.SelectedWeapon.Coins));
 
