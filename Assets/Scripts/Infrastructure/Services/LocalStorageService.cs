@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
+using Newtonsoft.Json;
 
 using SlotMachine.Infrastructure.Repository.Adapters;
 using SlotMachine.Infrastructure.Utils;
-using Newtonsoft.Json;
 
 namespace SlotMachine.Infrastructure.Services
 {

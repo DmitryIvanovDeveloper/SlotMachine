@@ -4,16 +4,22 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Collections;
 
 using SlotMachine.Game.Domain.SlotMachine.Events;
 using SlotMachine.Business.Domain.SlotMachine;
 using SlotMachine.Business.Common;
-using System.Collections;
 
 namespace SlotMachine.Game.Domain.SlotMachine
 {
     public class SlotMachine : MonoBehaviour
     {
+        [SerializeField]
+        private List<AudioClip> _slotSounds;
+
+        [SerializeField]
+        private AudioSource _audioSource;
+
         [SerializeField]
         private GameObject _congratulation;
 
@@ -27,17 +33,22 @@ namespace SlotMachine.Game.Domain.SlotMachine
         [SerializeField]
         private Image _shapeThree;
 
-        private SlotMachinePlayEvent _slotMachinePlayEvent;
-        private ISlotMachineInfo _slotMachineInfo;
-
         private float _elapseTime;
         private bool _isPlay;
 
+
+        private SlotMachinePlayEvent _slotMachinePlayEvent;
+        private ISlotMachineInfo _slotMachineInfo;
+        private SlotMachineEventUpdateViewHandler _slotMachineEventUpdateViewHandler;
+  
         [Inject]
-        public void Construct(ISlotMachineInfo slotMachineInfo , SlotMachinePlayEvent slotMachinePlayEvent)
+        public void Construct(ISlotMachineInfo slotMachineInfo,
+            SlotMachinePlayEvent slotMachinePlayEvent,
+            SlotMachineEventUpdateViewHandler slotMachineEventUpdateViewHandler)
         {
             _slotMachinePlayEvent = slotMachinePlayEvent;
             _slotMachineInfo = slotMachineInfo;
+            _slotMachineEventUpdateViewHandler = slotMachineEventUpdateViewHandler;
         }
 
         public void StartGame()
@@ -75,6 +86,7 @@ namespace SlotMachine.Game.Domain.SlotMachine
                 {
                     return;
                 }
+
 
                 StartCoroutine(ShowCongratulation());
                 return;
@@ -116,6 +128,8 @@ namespace SlotMachine.Game.Domain.SlotMachine
             }
 
             _shapeOne.sprite = GetSprite(_slotMachineInfo.ShapeOne);
+
+            _audioSource.PlayOneShot(_slotSounds[0]);
         }
 
         private IEnumerator ShapeTwoRandomImage()
@@ -128,7 +142,10 @@ namespace SlotMachine.Game.Domain.SlotMachine
                 _shapeTwo.sprite = GetSprite(_shapes[random.Next(_shapes.Count())].ShapeType);
             }
 
+
             _shapeTwo.sprite = GetSprite(_slotMachineInfo.ShapeTwo);
+
+            _audioSource.PlayOneShot(_slotSounds[1]);
         }
 
         private IEnumerator ShapeThreeRandomImage()
@@ -142,6 +159,15 @@ namespace SlotMachine.Game.Domain.SlotMachine
             }
 
             _shapeThree.sprite = GetSprite(_slotMachineInfo.ShapeThree);
+
+            _slotMachineEventUpdateViewHandler.Handle();
+
+            _audioSource.PlayOneShot(_slotSounds[2]);
+        }
+
+        private IEnumerator StartSlotsAnimations()
+        {
+            yield return new WaitForSeconds(2);
         }
     }
 }

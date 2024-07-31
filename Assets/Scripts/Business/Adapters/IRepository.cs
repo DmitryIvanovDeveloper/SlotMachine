@@ -2,7 +2,7 @@
 {
     public interface IRepository
     {
-        void SaveCoins(int numCoins);
+        //void SaveCoins(int numCoins);
     }
 }
 

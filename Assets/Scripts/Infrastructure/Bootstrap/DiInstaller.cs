@@ -9,6 +9,17 @@ using SlotMachine.Business.Domain.Coins;
 using SlotMachine.Business.Adapters;
 using SlotMachine.Infrastructure.Repository.Adapters;
 using SlotMachine.Infrastructure.Services;
+using SlotMachine.Game.Domain.CoinSlot.Events;
+using SlotMachine.Business.Domain.CoinSlot.UseCases;
+using SlotMachine.Business.Domain.CoinSlot;
+using SlotMachine.Business.Domain.Tokens;
+using SlotMachine.Business.Domain.Tokens.UseCase;
+using SlotMachine.Game.Domain.Tokens.Events;
+using SlotMachine.Business.Domain.State;
+using SlotMachine.Business.Domain.State.UseCase;
+using SlotMachine.Game.Domain.State.Events;
+using SlotMachine.Business.Domain.Inventory;
+using SlotMachine.Game.Domain.Inventory.Events;
 
 namespace SlotMachine.Infrastructure.Bootstrap
 {
@@ -25,6 +36,10 @@ namespace SlotMachine.Infrastructure.Bootstrap
         {
             Container.Bind(typeof(ISlotMachine), typeof(ISlotMachineInfo)).To<Business.Domain.SlotMachine.SlotMachine>().AsSingle();
             Container.Bind(typeof(ICoins), typeof(ICoinsInfo)).To<Coins>().AsSingle();
+            Container.Bind(typeof(ICoinSlot), typeof(ICoinSlotInfo)).To<CoinSlot>().AsSingle();
+            Container.Bind(typeof(ITokens), typeof(ITokensInfo)).To<Tokens>().AsSingle();
+            Container.Bind(typeof(IState), typeof(IStateInfo)).To<State>().AsSingle();
+            Container.Bind(typeof(IInventory), typeof(IInventoryInfo)).To<Inventory>().AsSingle();
 
             Container.Bind<IRepository>().To<Repository.Repository>().AsSingle();
             Container.Bind<ILocalStorageService>().To<LocalStorageService>().AsSingle();
@@ -36,11 +51,39 @@ namespace SlotMachine.Infrastructure.Bootstrap
             //// SlotMachinePlayEvent
             Container.Bind<SlotMachinePlayEvent>().AsSingle();
             Container.Bind<SlotMachineSlotMachinePlayEventExecuteUseCaseHandler>().AsSingle();
-            Container.Bind<SlotMachineSlotMachinePlayUpdateViewHandler>().AsSingle();
+            Container.Bind<SlotMachineEventUpdateViewHandler>().AsSingle();
 
+            //// CoinsOnTapEvent
             Container.Bind<CoinsOnTapEvent>().AsSingle();
             Container.Bind<CoinsOnTapEventExecuteUseCaseHandler>().AsSingle();
-            Container.Bind<CoinsOnTapEventUpdateViewHandler>().AsSingle();
+            Container.Bind<CoinsEventUpdateViewHandler>().AsSingle();
+
+            //// CoinSlotEventUpdateViewHandler
+            Container.Bind<CoinSlotEventUpdateViewHandler>().AsSingle();
+
+            //// CoinSlotAddCoinEvent
+            Container.Bind<CoinSlotAddCoinEvent>().AsSingle();
+            Container.Bind<CoinSlotAddCoinEventEnceaseCoinsUseCaseHandler>().AsSingle();
+
+            //// CoinSlotReturnCoinEvent
+            Container.Bind<CoinSlotReturnCoinEvent>().AsSingle();
+            Container.Bind<CoinSlotReturnCoinsEventExecuteUseCaseHandler>().AsSingle();
+
+            Container.Bind<TokensAddEvent>().AsSingle();
+            Container.Bind<TokensAddEventExecuteUseCaseHandler>().AsSingle();
+            Container.Bind<TokensEventUpdateViewHandler>().AsSingle();
+            
+            //// State
+            Container.Bind<StateEventUpdateViewHandler>().AsSingle();
+
+            Container.Bind<StateAddDamageEventExecuteUseCaseHandler>().AsSingle();
+            Container.Bind<StateAddDamageEvent>().AsSingle();
+
+            Container.Bind<StateRepairEvent>().AsSingle();
+            Container.Bind<StateRepairEventExecuteUseCaseHandler>().AsSingle();
+
+            Container.Bind<InventorySelectWeaponEvent>().AsSingle();
+            Container.Bind<InventorySelectWeaponEventExecuteUseCaseHandler>().AsSingle();
         }
 
         private void BindUseCases()
@@ -52,6 +95,21 @@ namespace SlotMachine.Infrastructure.Bootstrap
             Container.Bind<CoinsEncreaseUseCase>().AsSingle();
             Container.Bind<CoinsSaveUseCase>().AsSingle();
             Container.Bind<CoinsAddUseCase>().AsSingle();
+            Container.Bind<CoinsTryDecreaseUseCase>().AsSingle();
+            
+            //// CoinSlot
+            Container.Bind<CoinSlotEncreaseCoinsUseCase>().AsSingle();
+            Container.Bind<CoinSlotReturnCoinsUseCase>().AsSingle();
+
+            //// Tokens
+            Container.Bind<TokensAddUseCase>().AsSingle();
+
+            //// State
+            Container.Bind<StateAddDamageUseCase>().AsSingle();
+            Container.Bind<StateRepairUseCase>().AsSingle();
+
+            //// Inventory
+            Container.Bind<InventorySelectWeaponUseCase>().AsSingle();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace SlotMachine.Business.Domain.Coins.UseCases
 
         public void Execute()
         {
-            _dataBaseRepository.SaveCoins(_coinsInfo.Num);
+            //_dataBaseRepository.SaveCoins(_coinsInfo.Num);
         }
     }
 
