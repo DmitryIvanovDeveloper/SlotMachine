@@ -14,7 +14,6 @@ namespace SlotMachine.Game.Domain.Coins
     {
         private int _numCoins;
 
-
         [SerializeField]
         private AudioSource _audioSource;
 
@@ -32,6 +31,11 @@ namespace SlotMachine.Game.Domain.Coins
             _coinsInfo = coinsInfo;
             _coinsOnTapEvent = coinsOnTapEvent;
             _slotMachineInfo = slotMachineInfo;
+        }
+
+        private void Start()
+        {
+            _coinsInfo.OnCoinsChanged += UpdateView;
         }
 
         public void UpdateView()

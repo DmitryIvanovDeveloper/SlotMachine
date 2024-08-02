@@ -8,6 +8,8 @@ using SlotMachine.Game.Domain.CoinSlot.Events;
 using SlotMachine.Game.Util.Extensions;
 using SlotMachine.Business.Domain.CoinSlot;
 using TMPro;
+using SlotMachine.Business.Common;
+using SlotMacchine.Game.Domain.Utils;
 
 namespace SlotMachine.Game.Domain.CoinSlot
 {
@@ -29,6 +31,8 @@ namespace SlotMachine.Game.Domain.CoinSlot
         private ICoinSlotInfo _coinSlotInfo;
         private CoinSlotReturnCoinEvent _coinSlotReturnCoinEvent;
         private CoinSlotAddCoinEvent _coinSlotEvent;
+
+        private CoinType _cointType;
 
         [Inject]
         public void Construct
@@ -65,8 +69,15 @@ namespace SlotMachine.Game.Domain.CoinSlot
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            var coin = collision.transform.GetComponentOrThrow<Coin>();
-            _coinSlotEvent.Notify(coin.CoinType);
+            if (collision.transform.TryGetComponent(out Coin coin))
+            {
+                _coinSlotEvent.Notify(coin.CoinType);
+
+                var dragAndDrop = collision.transform.GetComponentOrThrow<DragAndDrop>();
+
+                dragAndDrop.OnMouseUp();
+            }
+
         }
     }
 }

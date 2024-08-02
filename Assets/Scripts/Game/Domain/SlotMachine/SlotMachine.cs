@@ -53,8 +53,6 @@ namespace SlotMachine.Game.Domain.SlotMachine
 
         public void StartGame()
         {
-            _isPlay = true;
-
             StartCoroutine(ShapeOneRandomImage());
             StartCoroutine(ShapeTwoRandomImage());
             StartCoroutine(ShapeThreeRandomImage());
@@ -101,6 +99,8 @@ namespace SlotMachine.Game.Domain.SlotMachine
             {
                 return;
             }
+
+            _isPlay = true;
 
             await _slotMachinePlayEvent.Notify();
         }
