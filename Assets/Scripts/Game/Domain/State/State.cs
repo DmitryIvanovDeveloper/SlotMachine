@@ -20,7 +20,7 @@ namespace SlotMachine.Game.Domain.State
         [SerializeField]
         private Image _healthSlider;
         [SerializeField]
-        private GameObject _underRepair;
+        private GameObject _levelCompleted;
 
         [SerializeField]
         private AudioClip _lightAudioClip;
@@ -110,7 +110,7 @@ namespace SlotMachine.Game.Domain.State
         {
             var isBroken = _stateInfo.CurrentStateType == Business.Common.StateType.Broken;
 
-            _underRepair.SetActive(isBroken);
+            _levelCompleted.SetActive(isBroken);
 
             if (!isBroken)
             {

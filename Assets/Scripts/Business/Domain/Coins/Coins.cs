@@ -6,6 +6,8 @@ namespace SlotMachine.Business.Domain.Coins
 {
     public class Coins : ICoins, ICoinsInfo
     {
+        public delegate void CoinsChanged();
+        public event CoinsChanged OnCoinsChanged;
         public Dictionary<CoinType, int> NumCoinsByType { get; private set; } = new Dictionary<CoinType, int>()
         {
             { CoinType.Golden, 0 },
@@ -17,11 +19,15 @@ namespace SlotMachine.Business.Domain.Coins
         public void Encrease(CoinType coinType)
         {
             NumCoinsByType[coinType] += 1;
+
+            OnCoinsChanged?.Invoke();
         }
 
         public void Add(CoinType coinType, int num)
         {
             NumCoinsByType[coinType] += num;
+
+            OnCoinsChanged?.Invoke();
         }
 
         public bool TryDecrease(CoinType coinType, int num)
@@ -31,7 +37,10 @@ namespace SlotMachine.Business.Domain.Coins
                 return false;
             }
 
+
             NumCoinsByType[coinType] -= num;
+
+            OnCoinsChanged?.Invoke();
 
             return true;
         }

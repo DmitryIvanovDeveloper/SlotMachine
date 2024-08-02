@@ -1,5 +1,6 @@
 ﻿using SlotMachine.Business.Common;
 using SlotMachine.Business.Domain.Coins.UseCases;
+using UnityEngine;
 
 namespace SlotMachine.Business.Domain.CoinSlot
 {
@@ -27,6 +28,7 @@ namespace SlotMachine.Business.Domain.CoinSlot
 
         public bool TryEncrease(CoinType coinType)
         {
+            Debug.Log(coinType);
             if (coinType != CurrentCoinType && CurrentCoinType != CoinType.Undefined)
             {
                 return false;

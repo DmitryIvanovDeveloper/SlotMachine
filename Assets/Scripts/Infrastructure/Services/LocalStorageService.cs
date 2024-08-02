@@ -74,7 +74,6 @@ namespace SlotMachine.Infrastructure.Services
         public void SaveCoins(string coins)
         {
             _sessionData.Coins = coins;
-            Debug.Log(_sessionData.Coins);
             SaveSessionData();
         }
 

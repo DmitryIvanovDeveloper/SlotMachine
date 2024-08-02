@@ -20,6 +20,10 @@ using SlotMachine.Business.Domain.State.UseCase;
 using SlotMachine.Game.Domain.State.Events;
 using SlotMachine.Business.Domain.Inventory;
 using SlotMachine.Game.Domain.Inventory.Events;
+using SlotMachine.Business.Domain.StageTimer;
+using SlotMachine.Business.Domain.StageTimer.Events;
+using SlotMachine.Business.Domain.Police;
+using SlotMachine.Business.Domain.Bonus;
 
 namespace SlotMachine.Infrastructure.Bootstrap
 {
@@ -40,6 +44,9 @@ namespace SlotMachine.Infrastructure.Bootstrap
             Container.Bind(typeof(ITokens), typeof(ITokensInfo)).To<Tokens>().AsSingle();
             Container.Bind(typeof(IState), typeof(IStateInfo)).To<State>().AsSingle();
             Container.Bind(typeof(IInventory), typeof(IInventoryInfo)).To<Inventory>().AsSingle();
+            Container.Bind(typeof(IStageTimer), typeof(IStageTimerInfo)).To<StageTimer>().AsSingle();
+            Container.Bind(typeof(IPoliceInfo)).To<Police>().AsSingle();
+            Container.Bind(typeof(IBonusInfo)).To<Bonus>().AsSingle();
 
             Container.Bind<IRepository>().To<Repository.Repository>().AsSingle();
             Container.Bind<ILocalStorageService>().To<LocalStorageService>().AsSingle();
@@ -49,67 +56,79 @@ namespace SlotMachine.Infrastructure.Bootstrap
         private void BindEvents()
         {
             //// SlotMachinePlayEvent
-            Container.Bind<SlotMachinePlayEvent>().AsSingle();
-            Container.Bind<SlotMachineSlotMachinePlayEventExecuteUseCaseHandler>().AsSingle();
-            Container.Bind<SlotMachineEventUpdateViewHandler>().AsSingle();
+            Container.Bind<SlotMachinePlayEvent>().AsTransient();
+            Container.Bind<SlotMachineSlotMachinePlayEventExecuteUseCaseHandler>().AsTransient();
+            Container.Bind<SlotMachineEventUpdateViewHandler>().AsTransient();
 
             //// CoinsOnTapEvent
-            Container.Bind<CoinsOnTapEvent>().AsSingle();
-            Container.Bind<CoinsOnTapEventExecuteUseCaseHandler>().AsSingle();
-            Container.Bind<CoinsEventUpdateViewHandler>().AsSingle();
+            Container.Bind<CoinsOnTapEvent>().AsTransient();
+            Container.Bind<CoinsOnTapEventExecuteUseCaseHandler>().AsTransient();
+            Container.Bind<CoinsEventUpdateViewHandler>().AsTransient();
 
             //// CoinSlotEventUpdateViewHandler
-            Container.Bind<CoinSlotEventUpdateViewHandler>().AsSingle();
+            Container.Bind<CoinSlotEventUpdateViewHandler>().AsTransient();
 
             //// CoinSlotAddCoinEvent
-            Container.Bind<CoinSlotAddCoinEvent>().AsSingle();
-            Container.Bind<CoinSlotAddCoinEventEnceaseCoinsUseCaseHandler>().AsSingle();
+            Container.Bind<CoinSlotAddCoinEvent>().AsTransient();
+            Container.Bind<CoinSlotAddCoinEventEnceaseCoinsUseCaseHandler>().AsTransient();
 
             //// CoinSlotReturnCoinEvent
-            Container.Bind<CoinSlotReturnCoinEvent>().AsSingle();
-            Container.Bind<CoinSlotReturnCoinsEventExecuteUseCaseHandler>().AsSingle();
+            Container.Bind<CoinSlotReturnCoinEvent>().AsTransient();
+            Container.Bind<CoinSlotReturnCoinsEventExecuteUseCaseHandler>().AsTransient();
 
-            Container.Bind<TokensAddEvent>().AsSingle();
-            Container.Bind<TokensAddEventExecuteUseCaseHandler>().AsSingle();
-            Container.Bind<TokensEventUpdateViewHandler>().AsSingle();
+            Container.Bind<TokensAddEvent>().AsTransient();
+            Container.Bind<TokensAddEventExecuteUseCaseHandler>().AsTransient();
+            Container.Bind<TokensEventUpdateViewHandler>().AsTransient();
             
             //// State
-            Container.Bind<StateEventUpdateViewHandler>().AsSingle();
+            Container.Bind<StateEventUpdateViewHandler>().AsTransient();
 
-            Container.Bind<StateAddDamageEventExecuteUseCaseHandler>().AsSingle();
-            Container.Bind<StateAddDamageEvent>().AsSingle();
+            Container.Bind<StateAddDamageEventExecuteUseCaseHandler>().AsTransient();
+            Container.Bind<StateAddDamageEvent>().AsTransient();
 
-            Container.Bind<StateRepairEvent>().AsSingle();
-            Container.Bind<StateRepairEventExecuteUseCaseHandler>().AsSingle();
+            Container.Bind<StateRepairEvent>().AsTransient();
+            Container.Bind<StateRepairEventExecuteUseCaseHandler>().AsTransient();
 
-            Container.Bind<InventorySelectWeaponEvent>().AsSingle();
-            Container.Bind<InventorySelectWeaponEventExecuteUseCaseHandler>().AsSingle();
+            Container.Bind<InventorySelectWeaponEvent>().AsTransient();
+            Container.Bind<InventorySelectWeaponEventExecuteUseCaseHandler>().AsTransient();
+
+
+            Container.Bind<StageTimerStartEvent>().AsTransient();
+            Container.Bind<StageTimerStartEventExecuteUseCaseHandler>().AsTransient();
+
         }
 
         private void BindUseCases()
         {
             //// SlotMachine
-            Container.Bind<SlotMachinePlayUseCase>().AsSingle();
+            Container.Bind<SlotMachinePlayUseCase>().AsTransient();
 
             //// Coins
-            Container.Bind<CoinsEncreaseUseCase>().AsSingle();
-            Container.Bind<CoinsSaveUseCase>().AsSingle();
-            Container.Bind<CoinsAddUseCase>().AsSingle();
-            Container.Bind<CoinsTryDecreaseUseCase>().AsSingle();
+            Container.Bind<CoinsEncreaseUseCase>().AsTransient();
+            Container.Bind<CoinsSaveUseCase>().AsTransient();
+            Container.Bind<CoinsAddUseCase>().AsTransient();
+            Container.Bind<CoinsTryDecreaseUseCase>().AsTransient();
             
             //// CoinSlot
-            Container.Bind<CoinSlotEncreaseCoinsUseCase>().AsSingle();
-            Container.Bind<CoinSlotReturnCoinsUseCase>().AsSingle();
+            Container.Bind<CoinSlotEncreaseCoinsUseCase>().AsTransient();
+            Container.Bind<CoinSlotReturnCoinsUseCase>().AsTransient();
 
             //// Tokens
-            Container.Bind<TokensAddUseCase>().AsSingle();
+            Container.Bind<TokensAddUseCase>().AsTransient();
 
             //// State
-            Container.Bind<StateAddDamageUseCase>().AsSingle();
-            Container.Bind<StateRepairUseCase>().AsSingle();
+            Container.Bind<StateAddDamageUseCase>().AsTransient();
+            Container.Bind<StateRepairUseCase>().AsTransient();
 
             //// Inventory
-            Container.Bind<InventorySelectWeaponUseCase>().AsSingle();
+            Container.Bind<InventorySelectWeaponUseCase>().AsTransient();
+
+            //// StageTimer
+            Container.Bind<StageTimerStartUseCase>().AsTransient();
+            Container.Bind<StageTimerStopUseCase>().AsTransient();
+            
+
+
         }
     }
 }

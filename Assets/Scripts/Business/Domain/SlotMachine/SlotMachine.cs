@@ -66,7 +66,8 @@ namespace SlotMachine.Business.Domain.SlotMachine
 
         public int GetPoints()
         {
-            if (!_pointsByShapes.ContainsKey((ShapeOne, ShapeTwo, ShapeThree)))
+            if (!_pointsByShapes.ContainsKey((ShapeOne, ShapeTwo, ShapeThree)) ||
+                !NumCoinsToPlayByType.ContainsKey(_playedCoinType))
             {
                 return 0;
             }
