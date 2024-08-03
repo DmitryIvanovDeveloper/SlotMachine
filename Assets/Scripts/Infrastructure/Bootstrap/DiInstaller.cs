@@ -24,6 +24,9 @@ using SlotMachine.Business.Domain.StageTimer;
 using SlotMachine.Business.Domain.StageTimer.Events;
 using SlotMachine.Business.Domain.Police;
 using SlotMachine.Business.Domain.Bonus;
+using SlotMachine.Business.Common.UseCases;
+using SlotMachine.Business.Domain.Health;
+using SlotMachine.Business.Domain.Health.UseCases;
 
 namespace SlotMachine.Infrastructure.Bootstrap
 {
@@ -47,6 +50,7 @@ namespace SlotMachine.Infrastructure.Bootstrap
             Container.Bind(typeof(IStageTimer), typeof(IStageTimerInfo)).To<StageTimer>().AsSingle();
             Container.Bind(typeof(IPoliceInfo)).To<Police>().AsSingle();
             Container.Bind(typeof(IBonusInfo)).To<Bonus>().AsSingle();
+            Container.Bind(typeof(IHealth), typeof(IHealthInfo)).To<Health>().AsSingle();
 
             Container.Bind<IRepository>().To<Repository.Repository>().AsSingle();
             Container.Bind<ILocalStorageService>().To<LocalStorageService>().AsSingle();
@@ -100,6 +104,10 @@ namespace SlotMachine.Infrastructure.Bootstrap
 
         private void BindUseCases()
         {
+            //// common
+            Container.Bind<HitUseCase>().AsTransient();
+            Container.Bind<StageStartUseCase>().AsTransient();
+
             //// SlotMachine
             Container.Bind<SlotMachinePlayUseCase>().AsTransient();
 
@@ -126,9 +134,11 @@ namespace SlotMachine.Infrastructure.Bootstrap
             //// StageTimer
             Container.Bind<StageTimerStartUseCase>().AsTransient();
             Container.Bind<StageTimerStopUseCase>().AsTransient();
+
+            //// HealthTryDamageUseCase
+            Container.Bind<HealthTryDamageUseCase>().AsTransient();
+            Container.Bind<HealthStartRepairUseCase>().AsTransient();
             
-
-
         }
     }
 }

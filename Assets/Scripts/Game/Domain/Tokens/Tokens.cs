@@ -24,6 +24,7 @@ namespace SlotMachine.Game.Domain.Tokens
 
         private void Start()
         {
+            _tokensInfo.OnTokensChanged += UpdateView;
             UpdateView();
         }
 

@@ -44,25 +44,22 @@ namespace SlotMachine.Game.Domain.State
         private List<StateImage> _stateImages;
 
         private IStateInfo _stateInfo;
-        private StateAddDamageEvent _stateAddDamageEvent;
         private StateRepairEvent _stateRepairEvent;
         private IInventoryInfo _inventoryInfo;
         [Inject]
         public void Construct(
             IStateInfo stateInfo,
             IInventoryInfo inventoryInfo,
-            StateAddDamageEvent stateAddDamageEvent,
             StateRepairEvent stateRepairEvent)
         {
             _stateInfo = stateInfo;
-            _stateAddDamageEvent = stateAddDamageEvent;
             _stateRepairEvent = stateRepairEvent;
             _inventoryInfo = inventoryInfo;
         }
 
         private void Start()
         {
-            UpdateView();
+            _stateInfo.OnStateChanged += UpdateView;
         }
 
         public void UpdateView()
@@ -75,6 +72,14 @@ namespace SlotMachine.Game.Domain.State
 
             _state.sprite = stateImage.Image;
 
+            var hitGameObject = Instantiate(_hitPrefab, _hits);
+
+            var num = hitGameObject
+                .FindChildOrThrow("Num")
+                .GetComponentOrThrow<TextMeshProUGUI>()
+            ;
+
+
             if (_stateInfo.CurrentStateType == Business.Common.StateType.HalfBroken)
             {
                 _audioSource.Play();
@@ -85,26 +90,14 @@ namespace SlotMachine.Game.Domain.State
                 _audioSource.Stop();
             }
 
-
             _healthSlider.fillAmount = (float)_stateInfo.HealthInPercentage / 100f;
+
+            num.text = $"+ {_inventoryInfo.SelectedWeapon.GetDamage()}";
+            hitGameObject.transform.localPosition = Input.mousePosition;
 
             UnderRepair();
         }
 
-        public async void Hit()
-        {
-            await _stateAddDamageEvent.Notify();
-
-            var hitGameObject = Instantiate(_hitPrefab, _hits);
-
-            var num = hitGameObject
-                .FindChildOrThrow("Num")
-                .GetComponentOrThrow<TextMeshProUGUI>()
-            ;
-
-            num.text = $"+ {_inventoryInfo.SelectedWeapon.GetDamage()}";
-            hitGameObject.transform.localPosition = Input.mousePosition;
-        }
 
         private void UnderRepair()
         {

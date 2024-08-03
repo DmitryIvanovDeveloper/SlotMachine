@@ -4,6 +4,7 @@ using SlotMachine.Business.Common;
 using SlotMachine.Business.Domain.Coins.UseCases;
 using SlotMachine.Business.Domain.Inventory;
 using SlotMachine.Business.Domain.StageTimer;
+using UnityEngine;
 
 namespace SlotMachine.Business.Domain.State
 {
@@ -24,7 +25,7 @@ namespace SlotMachine.Business.Domain.State
 
         private int _fullRepairInMinutes = 2;
 
-        private Random _random = new Random();
+System.Random _random = new System.Random();
 
 
         private CoinsAddUseCase _coinsAddUseCase;
@@ -53,14 +54,11 @@ namespace SlotMachine.Business.Domain.State
             if (_totalHits == (_maxHealth / 2))
             {
                 CurrentStateType = StateType.HalfBroken;
-
-                OnStateChanged?.Invoke();
             }
 
             if (_totalHits == (_maxHealth - (_maxHealth / 4)))
             {
                 CurrentStateType = StateType.QuatroBroken;
-                OnStateChanged?.Invoke();
             }
 
             if (HealthInPercentage <= 0)
@@ -68,14 +66,15 @@ namespace SlotMachine.Business.Domain.State
                 CurrentStateType = StateType.Broken;
                 _brokenAt = DateTime.UtcNow;
                 _stageTimerStopUseCase.Execute();
-
-                OnStateChanged?.Invoke();
             }
 
             if (_random.Next(1, 30) == 2)
             {
                 _coinsAddUseCase.Execute(CoinType.Silver, _random.Next(1, _inventoryInfo.SelectedWeapon.Coins));
             }
+
+            OnStateChanged?.Invoke();
+
         }
 
         private void DecreaseHealth()
