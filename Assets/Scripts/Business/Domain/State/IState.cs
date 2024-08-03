@@ -4,5 +4,6 @@
     {
         void AddDamage();
         void Repair();
+        void Init(int maxHealth, int fullRepairInMinutes);
     }
 }

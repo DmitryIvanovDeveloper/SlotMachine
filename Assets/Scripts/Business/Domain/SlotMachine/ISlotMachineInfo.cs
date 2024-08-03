@@ -5,7 +5,8 @@ namespace SlotMachine.Business.Domain.SlotMachine
 {
     public interface ISlotMachineInfo
     {
-        event ShapesChanged OnShapesChanged;
+        event SlotChanged OnSlostChanged;
+        event StartGame OnStartGame;
 
         int ShapeOneShowInSeconds { get; }
         int ShapeTwoShowInSeconds { get; }

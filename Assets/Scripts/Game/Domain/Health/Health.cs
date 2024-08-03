@@ -34,15 +34,6 @@ namespace SlotMachine.Game.Domain.Health
         {
             _healthSlider.fillAmount = (float)_healthInfo.HealthInPercentage / 100f;
         }
-
-        private IEnumerator Repair()
-        {
-            while(true)
-            {
-                yield return new WaitForSeconds(1/2);
-                _healthRepairUseCase.Execute();
-            }
-        }
     }
 }
 

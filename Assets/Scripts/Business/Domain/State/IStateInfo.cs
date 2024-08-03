@@ -9,6 +9,5 @@ namespace SlotMachine.Business.Domain.State
 
         StateType CurrentStateType { get; }
         double HealthInPercentage { get; }
-        int LastDamage { get; }
     }
 }

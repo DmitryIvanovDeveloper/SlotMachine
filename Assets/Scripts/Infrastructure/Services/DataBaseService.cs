@@ -13,6 +13,11 @@ namespace SlotMachine.Infrastructure.Services
         {
             throw new System.NotImplementedException();
         }
+
+        public void GetLevel()
+        {
+
+        }
     }
 
 }

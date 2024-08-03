@@ -87,9 +87,6 @@ namespace SlotMachine.Infrastructure.Repository
             return JsonConvert.DeserializeObject<TokensDto>(data);
         }
 
-
-
-
         private string Serialize(object data)
         {
             return JsonConvert.SerializeObject(data);

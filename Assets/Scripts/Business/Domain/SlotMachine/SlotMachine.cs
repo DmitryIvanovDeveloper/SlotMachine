@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using Cysharp.Threading.Tasks;
 using SlotMachine.Business.Common;
-using SlotMachine.Business.Domain.CoinSlot;
+using SlotMachine.Business.Domain.Coins.UseCases;
 using SlotMachine.Business.Domain.CoinSlot.UseCases;
+using static SlotMachine.Business.Domain.SlotMachine.SlotMachine;
 
 namespace SlotMachine.Business.Domain.SlotMachine
 {
     public class SlotMachine : ISlotMachine, ISlotMachineInfo
     {
-        public delegate void ShapesChanged();
-        public event ShapesChanged OnShapesChanged;
+        public delegate void SlotChanged(SlotType slotType);
+        public event SlotChanged OnSlostChanged;
+
+        public delegate void StartGame();
+        public event StartGame OnStartGame;
 
         public int NumCoinsToPlay { get; private set; } = 10;
         private CoinType _playedCoinType;
@@ -40,30 +44,56 @@ namespace SlotMachine.Business.Domain.SlotMachine
         private Array _values = Enum.GetValues(typeof(ShapeType));
 
         private CoinSlotTryDecreaseCoinsUseCase _coinSlotTryDecreaseCoinsUseCase;
+        private CoinsAddUseCase _coinsAddUseCase;
 
-        public SlotMachine(CoinSlotTryDecreaseCoinsUseCase coinSlotTryDecreaseCoinsUseCase)
+        public SlotMachine(CoinSlotTryDecreaseCoinsUseCase coinSlotTryDecreaseCoinsUseCase, CoinsAddUseCase coinsAddUseCase)
         {
             _coinSlotTryDecreaseCoinsUseCase = coinSlotTryDecreaseCoinsUseCase;
         }
 
-        public bool Play()
+        public async UniTask Play()
         {
             var coins = _coinSlotTryDecreaseCoinsUseCase.Execute();
             if (!coins.Item2)
             {
-                return false;
+                return;
             }
+
+            OnStartGame?.Invoke();
 
             var length = _values.Length;
 
-            ShapeOne = (ShapeType)_values.GetValue(_random.Next(length));
-            ShapeTwo = (ShapeType)_values.GetValue(_random.Next(length));
-            ShapeThree = (ShapeType)_values.GetValue(_random.Next(length));
+            await UniTask.RunOnThreadPool(async () =>
+            {
+                await UniTask.Delay(ShapeOneShowInSeconds * 1000);
+                ShapeOne = (ShapeType)_values.GetValue(_random.Next(length));
+                OnSlostChanged?.Invoke(SlotType.One);
 
-            OnShapesChanged?.Invoke();
-            return true;
+            }) ;
+
+            await UniTask.RunOnThreadPool(async () =>
+            {
+                await UniTask.Delay(ShapeTwoShowInSeconds * 1000);
+                ShapeTwo = (ShapeType)_values.GetValue(_random.Next(length));
+                OnSlostChanged?.Invoke(SlotType.Two);
+            });
+
+            await UniTask.RunOnThreadPool(async () =>
+            {
+                await UniTask.Delay(ShapeThreeShowInSeconds * 1000);
+                ShapeThree = (ShapeType)_values.GetValue(_random.Next(length));
+                OnSlostChanged?.Invoke(SlotType.Three);
+            });
+
+            var points = GetPoints();
+            if (points <= 0)
+            {
+                return;
+            }
+
+
+            _coinsAddUseCase.Execute(CoinType.Silver, points);
         }
-
 
         public int GetPoints()
         {

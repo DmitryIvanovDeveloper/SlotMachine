@@ -3,7 +3,7 @@ using SlotMachine.Business.Domain.StageTimer;
 
 namespace SlotMachine.Business.Domain.Police
 {
-    public class Police : IPoliceInfo
+    public class Police : IPolice, IPoliceInfo
     {
         public delegate void DoWork();
         public event DoWork OnDoWork;
@@ -27,6 +27,12 @@ namespace SlotMachine.Business.Domain.Police
 
             _startInSeconds = _random.Next(5, 15);
         }
+
+        public void Init(int startInSeconds)
+        {
+            _startInSeconds = startInSeconds;
+        }
+
 
         private void NotifyIfTime()
         {

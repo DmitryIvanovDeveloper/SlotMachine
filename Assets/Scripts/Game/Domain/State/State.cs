@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using Zenject;
 
 using SlotMachine.Business.Domain.State;
-using SlotMachine.Game.Domain.State.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -12,6 +11,7 @@ using SlotMachine.Game.Util.Extensions;
 using TMPro;
 using SlotMachine.Business.Domain.Inventory;
 using SlotMachine.Business.Domain.State.UseCase;
+using SlotMachine.Game.Common;
 
 namespace SlotMachine.Game.Domain.State
 {
@@ -36,23 +36,29 @@ namespace SlotMachine.Game.Domain.State
 
         [SerializeField]
         private GameObject _hitPrefab;
+
         [SerializeField]
         private Transform _hits;
 
         [SerializeField]
         private Image _state;
+
         [SerializeField]
         private List<StateImage> _stateImages;
 
+        private IGameContext _gameContext;
         private IStateInfo _stateInfo;
         private StateRepairUseCase _stateRepairUseCase;
         private IInventoryInfo _inventoryInfo;
+
         [Inject]
         public void Construct(
+            IGameContext gameContext,
             IStateInfo stateInfo,
             IInventoryInfo inventoryInfo,
             StateRepairUseCase stateRepairUseCase)
         {
+            _gameContext = gameContext;
             _stateInfo = stateInfo;
             _stateRepairUseCase = stateRepairUseCase;
             _inventoryInfo = inventoryInfo;
@@ -60,7 +66,11 @@ namespace SlotMachine.Game.Domain.State
 
         private void Start()
         {
+            _stateImages = _gameContext.Level.SlotMachine.StateImages;
+
             _stateInfo.OnStateChanged += UpdateView;
+
+            UpdateView();
         }
 
         public void UpdateView()

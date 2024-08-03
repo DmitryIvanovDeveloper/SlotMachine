@@ -17,6 +17,11 @@ namespace SlotMachine.Business.Domain.StageTimer
 
         private bool _isStarted;
 
+        public void Init(int maxTimeInSeconds)
+        {
+            MaxTimeInSeconds = maxTimeInSeconds;
+        }
+
         public async UniTask Start()
         {
             _startTime = DateTime.UtcNow;

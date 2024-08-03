@@ -37,27 +37,63 @@ namespace SlotMachine.Game.Domain.SlotMachine
         private float _elapseTime;
         private bool _isPlay;
 
+        private bool _shapeOneRolling;
+        private bool _shapeTwoRolling;
+        private bool _shapeThreeRolling;
+
 
         private SlotMachinePlayUseCase _slotMachinePlayUseCase;
         private ISlotMachineInfo _slotMachineInfo;
-        private SlotMachineEventUpdateViewHandler _slotMachineEventUpdateViewHandler;
   
         [Inject]
         public void Construct(ISlotMachineInfo slotMachineInfo,
-            SlotMachinePlayUseCase slotMachinePlayUseCase,
-            SlotMachineEventUpdateViewHandler slotMachineEventUpdateViewHandler)
+            SlotMachinePlayUseCase slotMachinePlayUseCase
         {
             _slotMachinePlayUseCase = slotMachinePlayUseCase;
             _slotMachineInfo = slotMachineInfo;
-            _slotMachineEventUpdateViewHandler = slotMachineEventUpdateViewHandler;
         }
 
-        public void StartGame()
+        private void Awake()
         {
+            _slotMachineInfo.OnStartGame += StartGame;
+            _slotMachineInfo.OnSlostChanged += ChangeSlot;
+        }
+
+        private void StartGame()
+        {
+            _shapeOneRolling = true;
+            _shapeTwoRolling = true;
+            _shapeThreeRolling = true;
+
             StartCoroutine(ShapeOneRandomImage());
             StartCoroutine(ShapeTwoRandomImage());
             StartCoroutine(ShapeThreeRandomImage());
         }
+
+        private void ChangeSlot(SlotType slotType)
+        {
+            if (slotType == SlotType.One)
+            {
+                _audioSource.PlayOneShot(_slotSounds[0]);
+                _shapeOneRolling = false;
+                _shapeOne.sprite = GetSprite(_slotMachineInfo.ShapeOne);
+            }
+
+            if (slotType == SlotType.Two)
+            {
+                _audioSource.PlayOneShot(_slotSounds[1]);
+                _shapeTwoRolling = false;
+                _shapeTwo.sprite = GetSprite(_slotMachineInfo.ShapeTwo);
+            }
+
+            if (slotType == SlotType.Three)
+            {
+                _audioSource.PlayOneShot(_slotSounds[1]);
+                _shapeThreeRolling = false;
+                _shapeThree.sprite = GetSprite(_slotMachineInfo.ShapeThree);
+            }
+        }
+
 
         public IEnumerator ShowCongratulation()
         {
@@ -94,7 +130,7 @@ namespace SlotMachine.Game.Domain.SlotMachine
             _elapseTime += Time.deltaTime;
         }
 
-        public void Play()
+        public async void Play()
         {
             if (_isPlay)
             {
@@ -103,7 +139,7 @@ namespace SlotMachine.Game.Domain.SlotMachine
 
             _isPlay = true;
 
-            _slotMachinePlayUseCase.Execute();
+            await _slotMachinePlayUseCase.Execute();
         }
 
         private Sprite GetSprite(ShapeType shapeType)
@@ -117,58 +153,37 @@ namespace SlotMachine.Game.Domain.SlotMachine
             return shape.Image;
         }
 
-
         private IEnumerator ShapeOneRandomImage()
         {
             var random = new System.Random();
 
-            while (_elapseTime < _slotMachineInfo.ShapeOneShowInSeconds)
+            while (_shapeOneRolling)
             {
-                yield return new WaitForSeconds(1 / 2);
+                yield return new WaitForFixedUpdate();
                 _shapeOne.sprite = GetSprite(_shapes[random.Next(_shapes.Count())].ShapeType);
             }
-
-            _shapeOne.sprite = GetSprite(_slotMachineInfo.ShapeOne);
-
-            _audioSource.PlayOneShot(_slotSounds[0]);
         }
 
         private IEnumerator ShapeTwoRandomImage()
         {
             var random = new System.Random();
 
-            while (_elapseTime < _slotMachineInfo.ShapeTwoShowInSeconds)
+            while (_shapeTwoRolling)
             {
-                yield return new WaitForSeconds(1 / 2);
+                yield return new WaitForFixedUpdate();
                 _shapeTwo.sprite = GetSprite(_shapes[random.Next(_shapes.Count())].ShapeType);
             }
-
-
-            _shapeTwo.sprite = GetSprite(_slotMachineInfo.ShapeTwo);
-
-            _audioSource.PlayOneShot(_slotSounds[1]);
         }
 
         private IEnumerator ShapeThreeRandomImage()
         {
             var random = new System.Random();
 
-            while (_elapseTime < _slotMachineInfo.ShapeThreeShowInSeconds)
+            while (_shapeThreeRolling)
             {
-                yield return new WaitForSeconds(1 / 2);
+                yield return new WaitForFixedUpdate();
                 _shapeThree.sprite = GetSprite(_shapes[random.Next(_shapes.Count())].ShapeType);
             }
-
-            _shapeThree.sprite = GetSprite(_slotMachineInfo.ShapeThree);
-
-            _slotMachineEventUpdateViewHandler.Handle();
-
-            _audioSource.PlayOneShot(_slotSounds[2]);
-        }
-
-        private IEnumerator StartSlotsAnimations()
-        {
-            yield return new WaitForSeconds(2);
         }
     }
 }

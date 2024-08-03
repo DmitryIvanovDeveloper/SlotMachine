@@ -29,6 +29,7 @@ using SlotMachine.Business.Domain.Health.UseCases;
 using SlotMachine.Business.Domain.Player;
 using SlotMachine.Business.Domain.Player.UseCases;
 using SlotMachine.Business.Domain.Common.UseCases;
+using SlotMachine.Business.Domain.Police.UseCases;
 
 namespace SlotMachine.Infrastructure.Bootstrap
 {
@@ -50,7 +51,7 @@ namespace SlotMachine.Infrastructure.Bootstrap
             Container.Bind(typeof(IState), typeof(IStateInfo)).To<State>().AsSingle();
             Container.Bind(typeof(IInventory), typeof(IInventoryInfo)).To<Inventory>().AsSingle();
             Container.Bind(typeof(IStageTimer), typeof(IStageTimerInfo)).To<StageTimer>().AsSingle();
-            Container.Bind(typeof(IPoliceInfo)).To<Police>().AsSingle();
+            Container.Bind(typeof(IPolice), typeof(IPoliceInfo)).To<Police>().AsSingle();
             Container.Bind(typeof(IBonusInfo)).To<Bonus>().AsSingle();
             Container.Bind(typeof(IHealth), typeof(IHealthInfo)).To<Health>().AsSingle();
             Container.Bind(typeof(IPlayer), typeof(IPlayerInfo)).To<Player>().AsSingle();
@@ -119,14 +120,16 @@ namespace SlotMachine.Infrastructure.Bootstrap
             //// State
             Container.Bind<StateAddDamageUseCase>().AsTransient();
             Container.Bind<StateRepairUseCase>().AsTransient();
-
+            Container.Bind<StateLoadDataUseCase>().AsTransient();
+            
             //// Inventory
             Container.Bind<InventorySelectWeaponUseCase>().AsTransient();
 
             //// StageTimer
             Container.Bind<StageTimerStartUseCase>().AsTransient();
             Container.Bind<StageTimerStopUseCase>().AsTransient();
-
+            Container.Bind<StageTimerLoadDataUseCase>().AsTransient();
+            
             //// HealthTryDamageUseCase
             Container.Bind<HealthTryDamageUseCase>().AsTransient();
             Container.Bind<HealthStartRepairUseCase>().AsTransient();
@@ -135,6 +138,9 @@ namespace SlotMachine.Infrastructure.Bootstrap
             Container.Bind<PlayerArrestUseCase>().AsTransient();
             Container.Bind<PlayerSaveUseCase>().AsTransient();
             Container.Bind<PlayerLoadDataUseCase>().AsTransient();
+
+            //// Police
+            Container.Bind<PoliceLoadDataUseCase>().AsTransient();
         }
     }
 }

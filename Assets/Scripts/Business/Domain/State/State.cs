@@ -4,7 +4,6 @@ using SlotMachine.Business.Common;
 using SlotMachine.Business.Domain.Coins.UseCases;
 using SlotMachine.Business.Domain.Inventory;
 using SlotMachine.Business.Domain.StageTimer;
-using UnityEngine;
 
 namespace SlotMachine.Business.Domain.State
 {
@@ -16,7 +15,6 @@ namespace SlotMachine.Business.Domain.State
         public StateType CurrentStateType { get; private set; } = StateType.New;
         public double HealthInPercentage { get; private set; } = 100;
 
-        public int LastDamage { get; private set; }
         private DateTime _brokenAt = DateTime.UtcNow;
 
         private double _maxHealth = 300;
@@ -25,7 +23,7 @@ namespace SlotMachine.Business.Domain.State
 
         private int _fullRepairInMinutes = 2;
 
-System.Random _random = new System.Random();
+        System.Random _random = new System.Random();
 
 
         private CoinsAddUseCase _coinsAddUseCase;
@@ -40,6 +38,12 @@ System.Random _random = new System.Random();
             _coinsAddUseCase = coinsAddUseCase;
             _inventoryInfo = inventoryInfo;
             _stageTimerStopUseCase = stageTimerStopUseCase;
+        }
+
+        public void Init(int maxHealth, int fullRepairInMinutes)
+        {
+            _maxHealth = maxHealth;
+            _fullRepairInMinutes = fullRepairInMinutes;
         }
 
         public void AddDamage()
@@ -80,7 +84,6 @@ System.Random _random = new System.Random();
         private void DecreaseHealth()
         {
             var damage = _inventoryInfo.SelectedWeapon.GetDamage();
-            LastDamage = damage;
             HealthInPercentage -= (damage / _maxHealth) * 100;
         }
 
