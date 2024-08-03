@@ -1,10 +1,11 @@
 ﻿using SlotMachine.Business.Common;
+using static SlotMachine.Business.Domain.SlotMachine.SlotMachine;
 
 namespace SlotMachine.Business.Domain.SlotMachine
 {
     public interface ISlotMachineInfo
     {
-        int NumCoinsToPlay { get; }
+        event ShapesChanged OnShapesChanged;
 
         int ShapeOneShowInSeconds { get; }
         int ShapeTwoShowInSeconds { get; }

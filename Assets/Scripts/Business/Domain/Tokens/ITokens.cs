@@ -4,5 +4,6 @@
     {
         void Add(int num);
         void Encrease();
+        void Init(long num);
     }
 }

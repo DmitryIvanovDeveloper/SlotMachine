@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using SlotMachine.Business.Domain.Inventory;
-using SlotMachine.Game.Domain.Inventory.Events;
 using SlotMachine.Game.Util.Extensions;
 using UI.Pagination;
 using UnityEngine;
@@ -23,16 +22,15 @@ namespace SlotMachine.Game.Domain.Inventory
         private List<InventoryImages> _inventoryImages;
 
         private IInventoryInfo _inventoryInfo;
-        private InventorySelectWeaponEvent _inventorySelectWeaponEvent;
+        private InventorySelectWeaponUseCase _inventorySelectWeaponUseCase;
 
         private List<GameObject> _weapons = new List<GameObject>();
 
-
         [Inject]
-        public void Construct(IInventoryInfo inventoryInfo, InventorySelectWeaponEvent inventorySelectWeaponEvent)
+        public void Construct(IInventoryInfo inventoryInfo, InventorySelectWeaponUseCase inventorySelectWeaponUseCase)
         {
             _inventoryInfo = inventoryInfo;
-            _inventorySelectWeaponEvent = inventorySelectWeaponEvent;
+            _inventorySelectWeaponUseCase = inventorySelectWeaponUseCase;
         }
 
         private void Start()
@@ -85,7 +83,7 @@ namespace SlotMachine.Game.Domain.Inventory
                 button.onClick.AddListener(delegate {
                     Unselect();
 
-                    _inventorySelectWeaponEvent.Notify(weapon.Value.WeaponType);
+                    _inventorySelectWeaponUseCase.Execute(weapon.Value.WeaponType);
                     button.gameObject.SetActive(false);
                     selected.SetActive(true);
                 });

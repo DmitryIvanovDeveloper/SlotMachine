@@ -7,6 +7,11 @@
 
         public long Num { get; private set; }
 
+        public void Init(long num)
+        {
+            Num = num;
+        }
+
         public void Add(int num)
         {
             Num += num;

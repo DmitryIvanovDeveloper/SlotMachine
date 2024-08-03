@@ -3,13 +3,15 @@ using System.Collections.Generic;
 
 using SlotMachine.Business.Common;
 using SlotMachine.Business.Domain.CoinSlot;
+using SlotMachine.Business.Domain.CoinSlot.UseCases;
 
 namespace SlotMachine.Business.Domain.SlotMachine
 {
     public class SlotMachine : ISlotMachine, ISlotMachineInfo
     {
-      
-        private int _numPlayedCoins = 0;
+        public delegate void ShapesChanged();
+        public event ShapesChanged OnShapesChanged;
+
         public int NumCoinsToPlay { get; private set; } = 10;
         private CoinType _playedCoinType;
 
@@ -37,22 +39,20 @@ namespace SlotMachine.Business.Domain.SlotMachine
         private System.Random _random = new System.Random();
         private Array _values = Enum.GetValues(typeof(ShapeType));
 
-        private ICoinSlot _coinSlot;
+        private CoinSlotTryDecreaseCoinsUseCase _coinSlotTryDecreaseCoinsUseCase;
 
-        public SlotMachine(ICoinSlot coinSlot)
+        public SlotMachine(CoinSlotTryDecreaseCoinsUseCase coinSlotTryDecreaseCoinsUseCase)
         {
-            _coinSlot = coinSlot;
+            _coinSlotTryDecreaseCoinsUseCase = coinSlotTryDecreaseCoinsUseCase;
         }
 
         public bool Play()
         {
-            var coins = _coinSlot.TakeCoins();
-            if (coins.Item2 == 0)
+            var coins = _coinSlotTryDecreaseCoinsUseCase.Execute();
+            if (!coins.Item2)
             {
                 return false;
             }
-
-            _numPlayedCoins = coins.Item2;
 
             var length = _values.Length;
 
@@ -60,6 +60,7 @@ namespace SlotMachine.Business.Domain.SlotMachine
             ShapeTwo = (ShapeType)_values.GetValue(_random.Next(length));
             ShapeThree = (ShapeType)_values.GetValue(_random.Next(length));
 
+            OnShapesChanged?.Invoke();
             return true;
         }
 

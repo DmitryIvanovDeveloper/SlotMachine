@@ -9,6 +9,7 @@ using System.Collections;
 using SlotMachine.Game.Domain.SlotMachine.Events;
 using SlotMachine.Business.Domain.SlotMachine;
 using SlotMachine.Business.Common;
+using SlotMachine.Business.Domain.SlotMachine.UseCase;
 
 namespace SlotMachine.Game.Domain.SlotMachine
 {
@@ -37,16 +38,16 @@ namespace SlotMachine.Game.Domain.SlotMachine
         private bool _isPlay;
 
 
-        private SlotMachinePlayEvent _slotMachinePlayEvent;
+        private SlotMachinePlayUseCase _slotMachinePlayUseCase;
         private ISlotMachineInfo _slotMachineInfo;
         private SlotMachineEventUpdateViewHandler _slotMachineEventUpdateViewHandler;
   
         [Inject]
         public void Construct(ISlotMachineInfo slotMachineInfo,
-            SlotMachinePlayEvent slotMachinePlayEvent,
+            SlotMachinePlayUseCase slotMachinePlayUseCase,
             SlotMachineEventUpdateViewHandler slotMachineEventUpdateViewHandler)
         {
-            _slotMachinePlayEvent = slotMachinePlayEvent;
+            _slotMachinePlayUseCase = slotMachinePlayUseCase;
             _slotMachineInfo = slotMachineInfo;
             _slotMachineEventUpdateViewHandler = slotMachineEventUpdateViewHandler;
         }
@@ -93,7 +94,7 @@ namespace SlotMachine.Game.Domain.SlotMachine
             _elapseTime += Time.deltaTime;
         }
 
-        public async void Play()
+        public void Play()
         {
             if (_isPlay)
             {
@@ -102,7 +103,7 @@ namespace SlotMachine.Game.Domain.SlotMachine
 
             _isPlay = true;
 
-            await _slotMachinePlayEvent.Notify();
+            _slotMachinePlayUseCase.Execute();
         }
 
         private Sprite GetSprite(ShapeType shapeType)

@@ -24,10 +24,7 @@ namespace SlotMachine.Business.Common.UseCases
 
         public bool Execute()
         {
-
             var isSuccess = _healthTryDamageUseCase.Execute();
-            Debug.Log(isSuccess);
-
             if (!isSuccess)
             {
                 return isSuccess;

@@ -7,6 +7,7 @@ namespace SlotMachine.Business.Domain.Coins
         void Encrease(CoinType coinType);
         bool TryDecrease(CoinType coinType, int num);
         void Add(CoinType coinType, int num);
+        void Init(int silver, int golden);
     }
 }
 

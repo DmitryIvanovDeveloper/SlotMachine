@@ -1,8 +1,18 @@
-﻿namespace SlotMachine.Business.Adapters
+﻿using SlotMachine.Business.Domain.Dtos;
+
+namespace SlotMachine.Business.Adapters
 {
     public interface IRepository
     {
-        //void SaveCoins(int numCoins);
+        void SaveCoins(CoinsDto coins);
+        void SavePlayer(PlayerDto dto);
+        void SaveTokens(TokensDto dto);
+
+        CoinsDto GetCoins();
+        PlayerDto GetPlayer();
+        TokensDto GetTokens();
+
+        PlayerDataDto LoadPlayerData();
     }
 }
 

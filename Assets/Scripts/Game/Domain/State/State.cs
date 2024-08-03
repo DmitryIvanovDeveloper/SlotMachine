@@ -11,6 +11,7 @@ using System.Collections;
 using SlotMachine.Game.Util.Extensions;
 using TMPro;
 using SlotMachine.Business.Domain.Inventory;
+using SlotMachine.Business.Domain.State.UseCase;
 
 namespace SlotMachine.Game.Domain.State
 {
@@ -44,16 +45,16 @@ namespace SlotMachine.Game.Domain.State
         private List<StateImage> _stateImages;
 
         private IStateInfo _stateInfo;
-        private StateRepairEvent _stateRepairEvent;
+        private StateRepairUseCase _stateRepairUseCase;
         private IInventoryInfo _inventoryInfo;
         [Inject]
         public void Construct(
             IStateInfo stateInfo,
             IInventoryInfo inventoryInfo,
-            StateRepairEvent stateRepairEvent)
+            StateRepairUseCase stateRepairUseCase)
         {
             _stateInfo = stateInfo;
-            _stateRepairEvent = stateRepairEvent;
+            _stateRepairUseCase = stateRepairUseCase;
             _inventoryInfo = inventoryInfo;
         }
 
@@ -118,7 +119,7 @@ namespace SlotMachine.Game.Domain.State
         private IEnumerator Repair()
         {
             yield return new WaitForSeconds(1);
-            _stateRepairEvent.Notify();
+            _stateRepairUseCase.Execute();
             _slider.fillAmount = (float)_stateInfo.HealthInPercentage / 100f;
         }
     }

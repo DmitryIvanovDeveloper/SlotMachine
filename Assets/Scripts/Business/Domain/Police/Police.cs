@@ -1,4 +1,5 @@
-﻿using SlotMachine.Business.Domain.StageTimer;
+﻿using SlotMachine.Business.Domain.Player.UseCases;
+using SlotMachine.Business.Domain.StageTimer;
 
 namespace SlotMachine.Business.Domain.Police
 {
@@ -13,11 +14,14 @@ namespace SlotMachine.Business.Domain.Police
         private int _startInSeconds;
 
         private IStageTimerInfo _stageTimerInfo;
+        private PlayerArrestUseCase _playerArrestUseCase;
+
         private System.Random _random = new System.Random();
 
-        public Police(IStageTimerInfo stageTimerInfo)
+        public Police(IStageTimerInfo stageTimerInfo, PlayerArrestUseCase playerArrestUseCase)
         {
             _stageTimerInfo = stageTimerInfo;
+            _playerArrestUseCase = playerArrestUseCase;
 
             _stageTimerInfo.OnUpdate += NotifyIfTime;
 
@@ -33,10 +37,10 @@ namespace SlotMachine.Business.Domain.Police
 
             if (_stageTimerInfo.CurrentTime.TotalSeconds <= 0)
             {
+                _playerArrestUseCase.Execute();
                 OnArrested?.Invoke();
             }
         }
     }
-
 }
 

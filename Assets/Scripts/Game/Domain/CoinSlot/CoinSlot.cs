@@ -32,8 +32,6 @@ namespace SlotMachine.Game.Domain.CoinSlot
         private CoinSlotReturnCoinEvent _coinSlotReturnCoinEvent;
         private CoinSlotAddCoinEvent _coinSlotEvent;
 
-        private CoinType _cointType;
-
         [Inject]
         public void Construct
             (ICoinSlotInfo coinSlotInfo,
@@ -46,9 +44,14 @@ namespace SlotMachine.Game.Domain.CoinSlot
             _coinSlotReturnCoinEvent = coinSlotReturnCoinEvent;
         }
 
+        private void Awake()
+        {
+            _coinSlotInfo.OnCoinsSlotChanged += UpdateView;
+        }
+
         public void UpdateView()
         {
-            _coin.sprite = _coinSlotInfo.CurrentCoinType == Business.Common.CoinType.Golden
+            _coin.sprite = _coinSlotInfo.CurrentCoinType == CoinType.Golden
                 ? _coins[0]
                 : _coins[1]
             ;
@@ -77,7 +80,6 @@ namespace SlotMachine.Game.Domain.CoinSlot
 
                 dragAndDrop.OnMouseUp();
             }
-
         }
     }
 }

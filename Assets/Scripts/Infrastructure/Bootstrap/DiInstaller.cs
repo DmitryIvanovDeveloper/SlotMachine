@@ -19,7 +19,6 @@ using SlotMachine.Business.Domain.State;
 using SlotMachine.Business.Domain.State.UseCase;
 using SlotMachine.Game.Domain.State.Events;
 using SlotMachine.Business.Domain.Inventory;
-using SlotMachine.Game.Domain.Inventory.Events;
 using SlotMachine.Business.Domain.StageTimer;
 using SlotMachine.Business.Domain.StageTimer.Events;
 using SlotMachine.Business.Domain.Police;
@@ -27,6 +26,9 @@ using SlotMachine.Business.Domain.Bonus;
 using SlotMachine.Business.Common.UseCases;
 using SlotMachine.Business.Domain.Health;
 using SlotMachine.Business.Domain.Health.UseCases;
+using SlotMachine.Business.Domain.Player;
+using SlotMachine.Business.Domain.Player.UseCases;
+using SlotMachine.Business.Domain.Common.UseCases;
 
 namespace SlotMachine.Infrastructure.Bootstrap
 {
@@ -51,6 +53,7 @@ namespace SlotMachine.Infrastructure.Bootstrap
             Container.Bind(typeof(IPoliceInfo)).To<Police>().AsSingle();
             Container.Bind(typeof(IBonusInfo)).To<Bonus>().AsSingle();
             Container.Bind(typeof(IHealth), typeof(IHealthInfo)).To<Health>().AsSingle();
+            Container.Bind(typeof(IPlayer), typeof(IPlayerInfo)).To<Player>().AsSingle();
 
             Container.Bind<IRepository>().To<Repository.Repository>().AsSingle();
             Container.Bind<ILocalStorageService>().To<LocalStorageService>().AsSingle();
@@ -60,13 +63,9 @@ namespace SlotMachine.Infrastructure.Bootstrap
         private void BindEvents()
         {
             //// SlotMachinePlayEvent
-            Container.Bind<SlotMachinePlayEvent>().AsTransient();
-            Container.Bind<SlotMachineSlotMachinePlayEventExecuteUseCaseHandler>().AsTransient();
             Container.Bind<SlotMachineEventUpdateViewHandler>().AsTransient();
 
             //// CoinsOnTapEvent
-            Container.Bind<CoinsOnTapEvent>().AsTransient();
-            Container.Bind<CoinsOnTapEventExecuteUseCaseHandler>().AsTransient();
             Container.Bind<CoinsEventUpdateViewHandler>().AsTransient();
 
             //// CoinSlotEventUpdateViewHandler
@@ -80,26 +79,14 @@ namespace SlotMachine.Infrastructure.Bootstrap
             Container.Bind<CoinSlotReturnCoinEvent>().AsTransient();
             Container.Bind<CoinSlotReturnCoinsEventExecuteUseCaseHandler>().AsTransient();
 
-            Container.Bind<TokensAddEvent>().AsTransient();
-            Container.Bind<TokensAddEventExecuteUseCaseHandler>().AsTransient();
+            //// Tokens
             Container.Bind<TokensEventUpdateViewHandler>().AsTransient();
             
             //// State
             Container.Bind<StateEventUpdateViewHandler>().AsTransient();
 
-            Container.Bind<StateAddDamageEventExecuteUseCaseHandler>().AsTransient();
-            Container.Bind<StateAddDamageEvent>().AsTransient();
-
-            Container.Bind<StateRepairEvent>().AsTransient();
-            Container.Bind<StateRepairEventExecuteUseCaseHandler>().AsTransient();
-
-            Container.Bind<InventorySelectWeaponEvent>().AsTransient();
-            Container.Bind<InventorySelectWeaponEventExecuteUseCaseHandler>().AsTransient();
-
-
             Container.Bind<StageTimerStartEvent>().AsTransient();
             Container.Bind<StageTimerStartEventExecuteUseCaseHandler>().AsTransient();
-
         }
 
         private void BindUseCases()
@@ -107,6 +94,7 @@ namespace SlotMachine.Infrastructure.Bootstrap
             //// common
             Container.Bind<HitUseCase>().AsTransient();
             Container.Bind<StageStartUseCase>().AsTransient();
+            Container.Bind<LoadDataUseCase>().AsTransient();
 
             //// SlotMachine
             Container.Bind<SlotMachinePlayUseCase>().AsTransient();
@@ -116,13 +104,17 @@ namespace SlotMachine.Infrastructure.Bootstrap
             Container.Bind<CoinsSaveUseCase>().AsTransient();
             Container.Bind<CoinsAddUseCase>().AsTransient();
             Container.Bind<CoinsTryDecreaseUseCase>().AsTransient();
+            Container.Bind<CoinsLoadDataUseCase>().AsTransient();
             
             //// CoinSlot
             Container.Bind<CoinSlotEncreaseCoinsUseCase>().AsTransient();
             Container.Bind<CoinSlotReturnCoinsUseCase>().AsTransient();
-
+            Container.Bind<CoinSlotTryDecreaseCoinsUseCase>().AsTransient();
+            
             //// Tokens
             Container.Bind<TokensAddUseCase>().AsTransient();
+            Container.Bind<TokensLoadDataUseCase>().AsTransient();
+            Container.Bind<TokensSaveUseCase>().AsTransient();
 
             //// State
             Container.Bind<StateAddDamageUseCase>().AsTransient();
@@ -138,7 +130,11 @@ namespace SlotMachine.Infrastructure.Bootstrap
             //// HealthTryDamageUseCase
             Container.Bind<HealthTryDamageUseCase>().AsTransient();
             Container.Bind<HealthStartRepairUseCase>().AsTransient();
-            
+
+            //// Player
+            Container.Bind<PlayerArrestUseCase>().AsTransient();
+            Container.Bind<PlayerSaveUseCase>().AsTransient();
+            Container.Bind<PlayerLoadDataUseCase>().AsTransient();
         }
     }
 }

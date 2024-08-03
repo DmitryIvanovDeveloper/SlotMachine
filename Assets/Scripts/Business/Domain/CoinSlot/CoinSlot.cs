@@ -1,11 +1,15 @@
 ﻿using SlotMachine.Business.Common;
 using SlotMachine.Business.Domain.Coins.UseCases;
 using UnityEngine;
+using static SlotMachine.Business.Domain.CoinSlot.CoinSlot;
 
 namespace SlotMachine.Business.Domain.CoinSlot
 {
     public class CoinSlot : ICoinSlot, ICoinSlotInfo
     {
+        public delegate void CoinsSlotChanged();
+        public event CoinsSlotChanged OnCoinsSlotChanged;
+
         public int NumCoins { get; private set; }
         public CoinType CurrentCoinType { get; private set; } = CoinType.Undefined;
 
@@ -20,15 +24,9 @@ namespace SlotMachine.Business.Domain.CoinSlot
             _coinsAddUseCase = coinsAddUseCase;
         }
 
-
-        public bool HasCoins(CoinType coinType)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public bool TryEncrease(CoinType coinType)
         {
-            Debug.Log(coinType);
+
             if (coinType != CurrentCoinType && CurrentCoinType != CoinType.Undefined)
             {
                 return false;
@@ -51,21 +49,32 @@ namespace SlotMachine.Business.Domain.CoinSlot
             }
 
             NumCoins += 1;
+
+            OnCoinsSlotChanged?.Invoke();
+
             return true;
         }
 
-        public (CoinType, int) TakeCoins()
+        public (CoinType, bool) TryDecreaseCoins()
         {
-            var coins = NumCoins;
-            NumCoins = 0;
+            if (NumCoins <= 0)
+            {
+                return (CurrentCoinType, false);
+            }
 
-            return (CurrentCoinType, coins);
+            NumCoins = 0;
+            OnCoinsSlotChanged?.Invoke();
+
+            return (CurrentCoinType, true);
         }
 
         public void ReturnCoins()
         {
             _coinsAddUseCase.Execute(CurrentCoinType, NumCoins);
+
             NumCoins = 0;
+
+            OnCoinsSlotChanged?.Invoke();
         }
     }
 }
