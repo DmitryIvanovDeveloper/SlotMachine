@@ -48,6 +48,7 @@ namespace SlotMachine.Game.Domain.SlotMachine
         [Inject]
         public void Construct(ISlotMachineInfo slotMachineInfo,
             SlotMachinePlayUseCase slotMachinePlayUseCase
+        )
         {
             _slotMachinePlayUseCase = slotMachinePlayUseCase;
             _slotMachineInfo = slotMachineInfo;
