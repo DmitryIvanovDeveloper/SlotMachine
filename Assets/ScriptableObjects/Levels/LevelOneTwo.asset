@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13fe21cb1e3d54e69a86b0b95e0567a1, type: 3}
   m_Name: LevelOneTwo
   m_EditorClassIdentifier: 
-  <TimeInSeconds>k__BackingField: 10
-  StartPoliceBeforeEndTime: 5
+  <LevelId>k__BackingField: 4b1aa4ee-565d-44cb-85a8-d9a4b0f9137a
+  <TimeInSeconds>k__BackingField: 15
+  StartPoliceBeforeEndTimeInSeconds: 10
   <SlotMachine>k__BackingField: {fileID: 11400000, guid: e62d74a02bb87470180ed1418ff05025, type: 2}
-  <Background>k__BackingField: {fileID: 21300000, guid: 6194577ac79fb5e4fb9a24692cf7801c, type: 3}
-  <Preview>k__BackingField: {fileID: 21300000, guid: 27fb3b1b442ceb3439da4619ee3e2452, type: 3}
+  <Background>k__BackingField: {fileID: 2800000, guid: 6194577ac79fb5e4fb9a24692cf7801c, type: 3}
+  <Preview>k__BackingField: {fileID: 2800000, guid: 851a544fa3b22b44c9602a98b8f6f4ec, type: 3}

@@ -16,10 +16,10 @@ MonoBehaviour:
   <MaxHealth>k__BackingField: 10
   <StateImages>k__BackingField:
   - <StateType>k__BackingField: 0
-    <Image>k__BackingField: {fileID: 21300000, guid: 69ca2099846153d4db57eab751521043, type: 3}
+    <Image>k__BackingField: {fileID: 2800000, guid: 90aab7e45267046a783ca149fa73730f, type: 3}
   - <StateType>k__BackingField: 1
-    <Image>k__BackingField: {fileID: 21300000, guid: 0aff4f246c3614992adbe81929b68e99, type: 3}
+    <Image>k__BackingField: {fileID: 2800000, guid: e49fc575f36894a86a25d08e7c84220a, type: 3}
   - <StateType>k__BackingField: 2
-    <Image>k__BackingField: {fileID: 21300000, guid: 3ca4f9f32c7a7455db8470512ce0a975, type: 3}
+    <Image>k__BackingField: {fileID: 2800000, guid: f7e1b1f4423784628888484988eac3cd, type: 3}
   - <StateType>k__BackingField: 3
-    <Image>k__BackingField: {fileID: 21300000, guid: c91d018ff2b9e4e598b784a5e3346b43, type: 3}
+    <Image>k__BackingField: {fileID: 2800000, guid: 67713a18ec81648bd9170e9a467b86d1, type: 3}
