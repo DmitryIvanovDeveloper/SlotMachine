@@ -33,7 +33,6 @@ namespace SlotMachine.Business.Domain.Police
             _startInSeconds = startInSeconds;
         }
 
-
         private void NotifyIfTime()
         {
             if (_stageTimerInfo.CurrentTime.TotalSeconds <= _startInSeconds)

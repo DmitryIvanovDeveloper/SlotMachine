@@ -1,6 +1,6 @@
 ﻿using SlotMachine.Business.Common;
+using SlotMachine.Business.Domain.Dtos;
 using SlotMachine.Game.Common;
-using SlotMachine.Settings;
 
 public class Context : IGameContext, IBusinessContext
 {
@@ -12,6 +12,6 @@ public class Context : IGameContext, IBusinessContext
 
     public int SlotMachineFullRepairInMinutes { get; set; }
 
-    public Level Level { get; set; }
+    public LevelDto Level { get; set; }
 }
 

@@ -1,22 +1,24 @@
-﻿using SlotMachine.Business.Adapters;
+﻿using Cysharp.Threading.Tasks;
+using SlotMachine.Business.Adapters;
 
 namespace SlotMachine.Business.Domain.Player.UseCases
 {
     public class PlayerLoadDataUseCase
     {
         private IPlayer _player;
-        private IRepository _repository;
+        private ILocalStorageRepository _localStorageRepository;
 
-        public PlayerLoadDataUseCase(IRepository repository, IPlayer player)
+        public PlayerLoadDataUseCase(ILocalStorageRepository localStorageRepository, IPlayer player)
         {
-            _repository = repository;
+            _localStorageRepository = localStorageRepository;
             _player = player;
         }
 
-        public void Execute()
+        public async UniTask Execute()
         {
-            var playerData = _repository.GetPlayer();
-            _player.Init(playerData.IsArrested);
+            var playerData = _localStorageRepository.GetPlayer();
+
+            await _player.Init(playerData.IsArrested, playerData.ArrestedAt);
         }
     }
 }

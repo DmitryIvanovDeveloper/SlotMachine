@@ -74,7 +74,6 @@ namespace SlotMachine.Infrastructure.Services
         public void SaveCoins(string data)
         {
             _sessionData.Coins = data;
-            Debug.Log(_sessionData.Coins);
             SaveSessionData();
         }
 
@@ -102,6 +101,12 @@ namespace SlotMachine.Infrastructure.Services
             SaveSessionData();
         }
 
+        public void SaveState(string data)
+        {
+            _sessionData.State = data;
+            SaveSessionData();
+        }
+
 
         public string GetCoins()
         {
@@ -116,6 +121,11 @@ namespace SlotMachine.Infrastructure.Services
         public string GetTokens()
         {
             return _sessionData.Tokens;
+        }
+
+        public string GetState()
+        {
+            return _sessionData.State;
         }
     }
 }

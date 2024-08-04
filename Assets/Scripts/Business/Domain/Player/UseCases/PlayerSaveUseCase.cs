@@ -6,22 +6,23 @@ namespace SlotMachine.Business.Domain.Player.UseCases
     public class PlayerSaveUseCase
     {
         private IPlayerInfo _playerInfo;
-        private IRepository _repository;
+        private ILocalStorageRepository _localStorageRepository;
 
-        public PlayerSaveUseCase(IPlayerInfo playerInfo, IRepository repository)
+        public PlayerSaveUseCase(IPlayerInfo playerInfo, ILocalStorageRepository localStorageRepository)
         {
             _playerInfo = playerInfo;
-            _repository = repository;
+            _localStorageRepository = localStorageRepository;
         }
 
         public void Execute()
         {
             var dto = new PlayerDto()
             {
-                IsArrested = _playerInfo.IsArrested
+                IsArrested = _playerInfo.IsArrested,
+                ArrestedAt = _playerInfo.ArrestedAt,
             };
 
-            _repository.SavePlayer(dto);
+            _localStorageRepository.SavePlayer(dto);
         }
     }
 }

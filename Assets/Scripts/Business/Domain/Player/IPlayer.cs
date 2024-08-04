@@ -1,8 +1,11 @@
-﻿namespace SlotMachine.Business.Domain.Player
+﻿using System;
+using Cysharp.Threading.Tasks;
+
+namespace SlotMachine.Business.Domain.Player
 {
     public interface IPlayer
     {
-        void Init(bool isArrested);
+        UniTask Init(bool isArrested, DateTime arrestedAt);
         void SetArrested();
     }
 }

@@ -6,20 +6,20 @@ namespace SlotMachine.Business.Domain.Tokens.UseCase
     public class TokensLoadDataUseCase
     {
         private ITokens _tokens;
-        private IRepository _repository;
+        private ILocalStorageRepository _localStorageRepository;
 
         public TokensLoadDataUseCase(
             ITokens tokens,
-            IRepository repository
+            ILocalStorageRepository localStorageRepository
         )
         {
             _tokens = tokens;
-            _repository = repository;
+            _localStorageRepository = localStorageRepository;
         }
 
         public void Execute()
         {
-            var dto = _repository.GetTokens();
+            var dto = _localStorageRepository.GetTokens();
             _tokens.Init(dto.Num);
         }
     }

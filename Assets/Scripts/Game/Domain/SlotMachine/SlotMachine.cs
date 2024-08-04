@@ -6,7 +6,6 @@ using System.Linq;
 using System;
 using System.Collections;
 
-using SlotMachine.Game.Domain.SlotMachine.Events;
 using SlotMachine.Business.Domain.SlotMachine;
 using SlotMachine.Business.Common;
 using SlotMachine.Business.Domain.SlotMachine.UseCase;

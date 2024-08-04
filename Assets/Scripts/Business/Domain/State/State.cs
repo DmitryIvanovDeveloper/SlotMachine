@@ -1,4 +1,5 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 
 using SlotMachine.Business.Common;
 using SlotMachine.Business.Domain.Coins.UseCases;
@@ -15,7 +16,7 @@ namespace SlotMachine.Business.Domain.State
         public StateType CurrentStateType { get; private set; } = StateType.New;
         public double HealthInPercentage { get; private set; } = 100;
 
-        private DateTime _brokenAt = DateTime.UtcNow;
+        public DateTime ChangedStateAt { get; private set; } = DateTime.UtcNow;
 
         private double _maxHealth = 300;
 
@@ -30,7 +31,8 @@ namespace SlotMachine.Business.Domain.State
         private IInventoryInfo _inventoryInfo;
         private StageTimerStopUseCase _stageTimerStopUseCase;
 
-        public State(IInventoryInfo inventoryInfo,
+        public State(
+            IInventoryInfo inventoryInfo,
             CoinsAddUseCase coinsAddUseCase,
             StageTimerStopUseCase stageTimerStopUseCase
         )
@@ -40,10 +42,13 @@ namespace SlotMachine.Business.Domain.State
             _stageTimerStopUseCase = stageTimerStopUseCase;
         }
 
-        public void Init(int maxHealth, int fullRepairInMinutes)
+        public async UniTask Init(int maxHealth, int fullRepairInMinutes, DateTime changedStateAt)
         {
             _maxHealth = maxHealth;
             _fullRepairInMinutes = fullRepairInMinutes;
+            ChangedStateAt = changedStateAt;
+
+            await Repair();
         }
 
         public void AddDamage()
@@ -55,26 +60,33 @@ namespace SlotMachine.Business.Domain.State
                 _totalHits += 1;
             }
 
+            if (_random.Next(1, 30) == 2)
+            {
+                _coinsAddUseCase.Execute(CoinType.Silver, _random.Next(1, _inventoryInfo.SelectedWeapon.Coins));
+            }
+
+            ChangeState();
+        }
+
+        private void ChangeState()
+        {
             if (_totalHits == (_maxHealth / 2))
             {
                 CurrentStateType = StateType.HalfBroken;
+                ChangedStateAt = DateTime.UtcNow;
             }
 
             if (_totalHits == (_maxHealth - (_maxHealth / 4)))
             {
                 CurrentStateType = StateType.QuatroBroken;
+                ChangedStateAt = DateTime.UtcNow;
             }
 
             if (HealthInPercentage <= 0)
             {
                 CurrentStateType = StateType.Broken;
-                _brokenAt = DateTime.UtcNow;
+                ChangedStateAt = DateTime.UtcNow;
                 _stageTimerStopUseCase.Execute();
-            }
-
-            if (_random.Next(1, 30) == 2)
-            {
-                _coinsAddUseCase.Execute(CoinType.Silver, _random.Next(1, _inventoryInfo.SelectedWeapon.Coins));
             }
 
             OnStateChanged?.Invoke();
@@ -87,23 +99,28 @@ namespace SlotMachine.Business.Domain.State
             HealthInPercentage -= (damage / _maxHealth) * 100;
         }
 
-        public void Repair()
+        public async UniTask Repair()
         {
-            var spentTime = DateTime.UtcNow - _brokenAt;
-
-            var staminaPercentageLastFeedAt = spentTime.TotalMinutes / _fullRepairInMinutes * 100;
-
-            //var actualStaminaPercentage = staminaPercentage + staminaPercentageLastFeedAt;
-
-            HealthInPercentage = staminaPercentageLastFeedAt > 100
-                ? 100
-                : staminaPercentageLastFeedAt //actualStaminaPercentage
-            ;
-
-            if (HealthInPercentage >= 100)
+            while(CurrentStateType != StateType.New)
             {
-                CurrentStateType = StateType.New;
-                _totalHits = 0;
+                await UniTask.Delay(1000);
+
+                var spentTime = DateTime.UtcNow - ChangedStateAt;
+
+                var staminaPercentageLastFeedAt = spentTime.TotalMinutes / _fullRepairInMinutes * 100;
+
+                //var actualStaminaPercentage = staminaPercentage + staminaPercentageLastFeedAt;
+
+                HealthInPercentage = staminaPercentageLastFeedAt > 100
+                    ? 100
+                    : staminaPercentageLastFeedAt //actualStaminaPercentage
+                ;
+
+                if (HealthInPercentage >= 100)
+                {
+                    CurrentStateType = StateType.New;
+                    _totalHits = 0;
+                }
             }
         }
     }

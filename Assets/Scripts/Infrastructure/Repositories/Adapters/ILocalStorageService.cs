@@ -8,10 +8,13 @@ namespace SlotMachine.Infrastructure.Repository.Adapters
         void SaveCoins(string coins);
         void SavePlayer(string data);
         void SaveTokens(string data);
+        void SaveState(string data);
 
         string GetCoins();
         string GetPlayer();
         string GetTokens();
+        string GetState();
+
     }
 }
 

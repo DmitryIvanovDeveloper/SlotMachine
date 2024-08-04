@@ -7,12 +7,12 @@ namespace SlotMachine.Business.Domain.Tokens.UseCase
     public class TokensSaveUseCase
     {
         private ITokensInfo _tokensInfo;
-        private IRepository _repository;
+        private ILocalStorageRepository _localStorageRepository;
 
-        public TokensSaveUseCase(ITokensInfo tokensInfo, IRepository repository)
+        public TokensSaveUseCase(ITokensInfo tokensInfo, ILocalStorageRepository localStorageRepository)
         {
             _tokensInfo = tokensInfo;
-            _repository = repository;
+            _localStorageRepository = localStorageRepository;
         }
 
         public void Execute()
@@ -22,7 +22,7 @@ namespace SlotMachine.Business.Domain.Tokens.UseCase
                 Num = _tokensInfo.Num
             };
 
-            _repository.SaveTokens(dto);
+            _localStorageRepository.SaveTokens(dto);
         }
     }
 }

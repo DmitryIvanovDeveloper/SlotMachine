@@ -23,7 +23,7 @@ namespace SlotMachine.Game.Common
         // Use this for initialization
         void Awake()
         {
-            _background.sprite = _gameContext.Level.Background;
+            //_background.sprite = _gameContext.Level.Background;
 
             _loadDataUseCase.Execute();
         }

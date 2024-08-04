@@ -1,4 +1,5 @@
-﻿using SlotMachine.Business.Common;
+﻿using System;
+using SlotMachine.Business.Common;
 
 namespace SlotMachine.Business.Domain.State.UseCase
 {
@@ -15,7 +16,7 @@ namespace SlotMachine.Business.Domain.State.UseCase
 
         public void Execute()
         {
-            _state.Init(_businessContext.SlotMachineMaxHealth, _businessContext.SlotMachineFullRepairInMinutes);
+            _state.Init(_businessContext.SlotMachineMaxHealth, _businessContext.SlotMachineFullRepairInMinutes, DateTime.UtcNow);
         }
     }
 }

@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 29affcfe289a7480eab7812a277fb8eb, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8217373763020221133}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SlotMachine.Game.Domain.Level.Level, Assembly-CSharp
         m_MethodName: Load
         m_Mode: 1
@@ -233,7 +233,6 @@ GameObject:
   - component: {fileID: 4567942941103995447}
   - component: {fileID: 1661789890964333810}
   - component: {fileID: 8431808818458448359}
-  - component: {fileID: 8217373763020221133}
   m_Layer: 5
   m_Name: Level
   m_TagString: Untagged
@@ -349,21 +348,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8217373763020221133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7330793343978180235}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4be3170aa95d4c34a214b81c4a57da8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animator: {fileID: 0}
-  _settings: {fileID: 11400000, guid: 16f6a4030713a42b79424e6494144ba4, type: 2}
-  _preview: {fileID: 8431808818458448359}
 --- !u!1001 &945501483920457641
 PrefabInstance:
   m_ObjectHideFlags: 0

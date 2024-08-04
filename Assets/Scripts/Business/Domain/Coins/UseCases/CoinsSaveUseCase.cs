@@ -7,12 +7,12 @@ namespace SlotMachine.Business.Domain.Coins.UseCases
 {
     public class CoinsSaveUseCase
     {
-        private IRepository _repository;
+        private ILocalStorageRepository _localStorageRepository;
         private ICoinsInfo _coinsInfo;
 
-        public CoinsSaveUseCase(ICoinsInfo coinsInfo, IRepository repository)
+        public CoinsSaveUseCase(ICoinsInfo coinsInfo, ILocalStorageRepository localStorageRepository)
         {
-            _repository = repository;
+            _localStorageRepository = localStorageRepository;
             _coinsInfo = coinsInfo;
         }
 
@@ -24,7 +24,7 @@ namespace SlotMachine.Business.Domain.Coins.UseCases
                 Golden = _coinsInfo.NumCoinsByType[CoinType.Golden],
             };
 
-            _repository.SaveCoins(dto);
+            _localStorageRepository.SaveCoins(dto);
         }
 
         private object CoinsDto()

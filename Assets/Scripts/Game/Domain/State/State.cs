@@ -12,6 +12,8 @@ using TMPro;
 using SlotMachine.Business.Domain.Inventory;
 using SlotMachine.Business.Domain.State.UseCase;
 using SlotMachine.Game.Common;
+using SlotMachine.Business.Domain.Dtos;
+using SlotMachine.Business.Common;
 
 namespace SlotMachine.Game.Domain.State
 {
@@ -66,11 +68,46 @@ namespace SlotMachine.Game.Domain.State
 
         private void Start()
         {
-            _stateImages = _gameContext.Level.SlotMachine.StateImages;
+            _stateImages = GetStateImages(_gameContext.Level.SlotMachine.StatesSlotMachine);
 
             _stateInfo.OnStateChanged += UpdateView;
 
+            var newStateImage = _stateImages.FirstOrDefault(image => image.StateType == StateType.New);
+            if (newStateImage == null)
+            {
+                throw new Exception("Error");
+            }
+
+            _state.sprite = newStateImage.Image;
             UpdateView();
+        }
+
+        private List<StateImage> GetStateImages(List<SlotMachineStateDto> slotMachineStates)
+        {
+            var statesImage = new List<StateImage>();
+
+            foreach (var slotState in slotMachineStates)
+            {
+                Debug.Log(slotState.Image);
+
+                var stateImage = new StateImage()
+                {
+                    StateType = slotState.StateType,
+                    Image = ConvertUrlToSprite(slotState.Image)
+                };
+
+                statesImage.Add(stateImage);
+            }
+
+            return statesImage;
+        }
+
+        private Sprite ConvertUrlToSprite(byte[] imageBytes)
+        {
+            var texture = new Texture2D(2, 2, TextureFormat.BGRA32, false);
+            texture.LoadImage(imageBytes);
+            texture.Apply();
+            return Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
         }
 
         public void UpdateView()
@@ -81,7 +118,7 @@ namespace SlotMachine.Game.Domain.State
                 throw new Exception($"The state image doesn't exist for {_stateInfo.CurrentStateType} stateType");
             }
 
-            _state.sprite = stateImage.Image;
+            //_state.sprite = stateImage.Image;
 
             var hitGameObject = Instantiate(_hitPrefab, _hits);
 
