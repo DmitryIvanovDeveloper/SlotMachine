@@ -71,9 +71,9 @@ namespace SlotMachine.Infrastructure.Services
             }
         }
 
-        public void SaveCoins(string coins)
+        public void SaveCoins(string data)
         {
-            _sessionData.Coins = coins;
+            _sessionData.Coins = data;
             SaveSessionData();
         }
 
@@ -87,6 +87,45 @@ namespace SlotMachine.Infrastructure.Services
         {
             var json = System.Text.Encoding.UTF8.GetString(data);
             return JsonConvert.DeserializeObject<SessionData>(json);
+        }
+
+        public void SavePlayer(string data)
+        {
+            _sessionData.Player = data;
+            SaveSessionData();
+        }
+
+        public void SaveTokens(string data)
+        {
+            _sessionData.Tokens = data;
+            SaveSessionData();
+        }
+
+        public void SaveState(string data)
+        {
+            _sessionData.State = data;
+            SaveSessionData();
+        }
+
+
+        public string GetCoins()
+        {
+            return _sessionData.Coins;
+        }
+
+        public string GetPlayer()
+        {
+            return _sessionData.Player;
+        }
+
+        public string GetTokens()
+        {
+            return _sessionData.Tokens;
+        }
+
+        public string GetState()
+        {
+            return _sessionData.State;
         }
     }
 }

@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using Zenject;
 
 using SlotMachine.Business.Domain.State;
-using SlotMachine.Game.Domain.State.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -11,6 +10,10 @@ using System.Collections;
 using SlotMachine.Game.Util.Extensions;
 using TMPro;
 using SlotMachine.Business.Domain.Inventory;
+using SlotMachine.Business.Domain.State.UseCase;
+using SlotMachine.Game.Common;
+using SlotMachine.Business.Domain.Dtos;
+using SlotMachine.Business.Common;
 
 namespace SlotMachine.Game.Domain.State
 {
@@ -35,34 +38,76 @@ namespace SlotMachine.Game.Domain.State
 
         [SerializeField]
         private GameObject _hitPrefab;
+
         [SerializeField]
         private Transform _hits;
 
         [SerializeField]
         private Image _state;
+
         [SerializeField]
         private List<StateImage> _stateImages;
 
+        private IGameContext _gameContext;
         private IStateInfo _stateInfo;
-        private StateAddDamageEvent _stateAddDamageEvent;
-        private StateRepairEvent _stateRepairEvent;
+        private StateRepairUseCase _stateRepairUseCase;
         private IInventoryInfo _inventoryInfo;
+
         [Inject]
         public void Construct(
+            IGameContext gameContext,
             IStateInfo stateInfo,
             IInventoryInfo inventoryInfo,
-            StateAddDamageEvent stateAddDamageEvent,
-            StateRepairEvent stateRepairEvent)
+            StateRepairUseCase stateRepairUseCase)
         {
+            _gameContext = gameContext;
             _stateInfo = stateInfo;
-            _stateAddDamageEvent = stateAddDamageEvent;
-            _stateRepairEvent = stateRepairEvent;
+            _stateRepairUseCase = stateRepairUseCase;
             _inventoryInfo = inventoryInfo;
         }
 
         private void Start()
         {
+            _stateImages = GetStateImages(_gameContext.Level.SlotMachine.StatesSlotMachine);
+
+            _stateInfo.OnStateChanged += UpdateView;
+
+            var newStateImage = _stateImages.FirstOrDefault(image => image.StateType == StateType.New);
+            if (newStateImage == null)
+            {
+                throw new Exception("Error");
+            }
+
+            _state.sprite = newStateImage.Image;
             UpdateView();
+        }
+
+        private List<StateImage> GetStateImages(List<SlotMachineStateDto> slotMachineStates)
+        {
+            var statesImage = new List<StateImage>();
+
+            foreach (var slotState in slotMachineStates)
+            {
+                Debug.Log(slotState.Image);
+
+                var stateImage = new StateImage()
+                {
+                    StateType = slotState.StateType,
+                    Image = ConvertUrlToSprite(slotState.Image)
+                };
+
+                statesImage.Add(stateImage);
+            }
+
+            return statesImage;
+        }
+
+        private Sprite ConvertUrlToSprite(byte[] imageBytes)
+        {
+            var texture = new Texture2D(2, 2, TextureFormat.BGRA32, false);
+            texture.LoadImage(imageBytes);
+            texture.Apply();
+            return Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
         }
 
         public void UpdateView()
@@ -73,7 +118,15 @@ namespace SlotMachine.Game.Domain.State
                 throw new Exception($"The state image doesn't exist for {_stateInfo.CurrentStateType} stateType");
             }
 
-            _state.sprite = stateImage.Image;
+            //_state.sprite = stateImage.Image;
+
+            var hitGameObject = Instantiate(_hitPrefab, _hits);
+
+            var num = hitGameObject
+                .FindChildOrThrow("Num")
+                .GetComponentOrThrow<TextMeshProUGUI>()
+            ;
+
 
             if (_stateInfo.CurrentStateType == Business.Common.StateType.HalfBroken)
             {
@@ -85,26 +138,14 @@ namespace SlotMachine.Game.Domain.State
                 _audioSource.Stop();
             }
 
-
             _healthSlider.fillAmount = (float)_stateInfo.HealthInPercentage / 100f;
+
+            num.text = $"+ {_inventoryInfo.SelectedWeapon.GetDamage()}";
+            hitGameObject.transform.localPosition = Input.mousePosition;
 
             UnderRepair();
         }
 
-        public async void Hit()
-        {
-            await _stateAddDamageEvent.Notify();
-
-            var hitGameObject = Instantiate(_hitPrefab, _hits);
-
-            var num = hitGameObject
-                .FindChildOrThrow("Num")
-                .GetComponentOrThrow<TextMeshProUGUI>()
-            ;
-
-            num.text = $"+ {_inventoryInfo.SelectedWeapon.GetDamage()}";
-            hitGameObject.transform.localPosition = Input.mousePosition;
-        }
 
         private void UnderRepair()
         {
@@ -125,7 +166,7 @@ namespace SlotMachine.Game.Domain.State
         private IEnumerator Repair()
         {
             yield return new WaitForSeconds(1);
-            _stateRepairEvent.Notify();
+            _stateRepairUseCase.Execute();
             _slider.fillAmount = (float)_stateInfo.HealthInPercentage / 100f;
         }
     }

@@ -3,7 +3,7 @@ using UnityEngine;
 using Zenject;
 
 using SlotMachine.Business.Domain.Tokens;
-using SlotMachine.Game.Domain.Tokens.Events;
+using SlotMachine.Business.Domain.Tokens.UseCase;
 
 namespace SlotMachine.Game.Domain.Tokens
 {
@@ -13,17 +13,18 @@ namespace SlotMachine.Game.Domain.Tokens
         private TextMeshProUGUI _tokens;
 
         private ITokensInfo _tokensInfo;
-        private TokensAddEvent _tokensAddEvent;
+        private TokensAddUseCase _tokensAddUseCase;
 
         [Inject]
-        public void Construct(ITokensInfo tokensInfo, TokensAddEvent tokensAddEvent)
+        public void Construct(ITokensInfo tokensInfo, TokensAddUseCase tokensAddUseCase)
         {
             _tokensInfo = tokensInfo;
-            _tokensAddEvent = tokensAddEvent;
+            _tokensAddUseCase = tokensAddUseCase;
         }
 
         private void Start()
         {
+            _tokensInfo.OnTokensChanged += UpdateView;
             UpdateView();
         }
 
@@ -32,9 +33,9 @@ namespace SlotMachine.Game.Domain.Tokens
             _tokens.text = $"{_tokensInfo.Num}";
         }
 
-        public async void OnTap()
+        public void OnTap()
         {
-           await _tokensAddEvent.Notify();
+           _tokensAddUseCase.Execute();
         }
     }
 }

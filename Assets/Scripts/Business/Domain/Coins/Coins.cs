@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using SlotMachine.Business.Common;
+using UnityEngine;
 
 namespace SlotMachine.Business.Domain.Coins
 {
@@ -8,6 +9,7 @@ namespace SlotMachine.Business.Domain.Coins
     {
         public delegate void CoinsChanged();
         public event CoinsChanged OnCoinsChanged;
+
         public Dictionary<CoinType, int> NumCoinsByType { get; private set; } = new Dictionary<CoinType, int>()
         {
             { CoinType.Golden, 0 },
@@ -15,6 +17,14 @@ namespace SlotMachine.Business.Domain.Coins
         };
 
         public int NumCoinsOnTap { get; private set; } = 1;
+
+        public void Init(int silver, int golden)
+        {
+            NumCoinsByType[CoinType.Silver] = silver;
+            NumCoinsByType[CoinType.Golden] = golden;
+
+            OnCoinsChanged?.Invoke();
+        }
 
         public void Encrease(CoinType coinType)
         {
@@ -36,7 +46,6 @@ namespace SlotMachine.Business.Domain.Coins
             {
                 return false;
             }
-
 
             NumCoinsByType[coinType] -= num;
 

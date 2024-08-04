@@ -5,8 +5,7 @@ namespace SlotMachine.Business.Domain.CoinSlot
     public interface ICoinSlot
     {
         bool TryEncrease(CoinType coinType);
-        bool HasCoins(CoinType coinType);
-        (CoinType, int) TakeCoins();
+        (CoinType, bool) TryDecreaseCoins();
         void ReturnCoins();
     }
 }

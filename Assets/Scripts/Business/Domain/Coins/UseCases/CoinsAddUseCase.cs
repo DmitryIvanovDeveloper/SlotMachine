@@ -1,5 +1,4 @@
 ﻿using SlotMachine.Business.Common;
-using UnityEngine;
 
 namespace SlotMachine.Business.Domain.Coins.UseCases
 {
@@ -8,7 +7,10 @@ namespace SlotMachine.Business.Domain.Coins.UseCases
         private ICoins _coins;
         private CoinsSaveUseCase _coinsSaveUseCase;
 
-        public CoinsAddUseCase(ICoins coins, CoinsSaveUseCase coinsSaveUseCase)
+        public CoinsAddUseCase(
+            ICoins coins,
+            CoinsSaveUseCase coinsSaveUseCase
+        )
         {
             _coins = coins;
             _coinsSaveUseCase = coinsSaveUseCase;

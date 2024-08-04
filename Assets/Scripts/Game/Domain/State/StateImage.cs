@@ -8,9 +8,9 @@ namespace SlotMachine.Game.Domain.State
     public class StateImage
     {
         [field: SerializeField]
-        public StateType StateType { get; private set; }
+        public StateType StateType { get; set; }
 
         [field: SerializeField]
-        public Sprite Image { get; private set; }
+        public Sprite Image { get; set; }
     }
 }
