@@ -5,7 +5,7 @@ namespace SlotMachine.Infrastructure.Repository.Adapters.Responses
 {
     public interface ILevelsResponse
     {
-        public Guid LevelId { get; }
+        public Guid Id { get; }
         public int TimeInSeconds { get; }
         public int StartPoliceBeforeEndTimeInSeconds { get; }
         public byte[] BackgroundImage { get; }

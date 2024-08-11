@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
+
 using SlotMachine.Business.Adapters;
 using SlotMachine.Business.Domain.Dtos;
 using SlotMachine.Infrastructure.Repository.Adapters;
@@ -13,10 +14,15 @@ namespace SlotMachine.Infrastructure.Repository
     public class DatabaseRepository : IDatabaseRepository
     {
         private IDatabaseService _databaseService;
+        private ILocalStorageRepository _localStorageRepository;
 
-        public DatabaseRepository(IDatabaseService databaseService)
+        public DatabaseRepository(
+            IDatabaseService databaseService,
+            ILocalStorageRepository localStorageRepository
+        )
         {
             _databaseService = databaseService;
+            _localStorageRepository = localStorageRepository;
         }
 
         public async UniTask<List<LevelDto>> GetLevels()
@@ -33,6 +39,8 @@ namespace SlotMachine.Infrastructure.Repository
         {
             var dto = new List<LevelDto>();
 
+            Debug.Log(JsonConvert.SerializeObject(levels));
+
             foreach(var level in levels)
             {
                 var levelDto = new LevelDto()
@@ -40,17 +48,18 @@ namespace SlotMachine.Infrastructure.Repository
                     TimeInSeconds = level.TimeInSeconds,
                     StartPoliceBeforeEndTimeInSeconds = level.StartPoliceBeforeEndTimeInSeconds,
                     BackgroundImage = level.BackgroundImage,
-                    LevelId = level.LevelId,
+                    Id = level.Id,
                     PreviewImage = level.PreviewImage,
                 };
 
                 var slotMachine = new SlotMachineDto()
                 {
+                    Id = level.SlotMachine.Id,
                     FullRepairInMinutes = level.SlotMachine.FullRepairInMinutes,
                     MaxHealth = level.SlotMachine.MaxHealth,
                 };
 
-                foreach (var state in level.SlotMachine.StatesSlotMachine)
+                foreach (var state in level.SlotMachine.States)
                 {
                     var slotMachineStateDto = new SlotMachineStateDto()
                     {
@@ -77,7 +86,7 @@ namespace SlotMachine.Infrastructure.Repository
                 TimeInSeconds = dto.TimeInSeconds,
                 StartPoliceBeforeEndTimeInSeconds = dto.StartPoliceBeforeEndTimeInSeconds,
                 BackgroundImage = dto.BackgroundImage,
-                LevelId = dto.LevelId,
+                Id = dto.LevelId,
                 PreviewImage = dto.PreviewImage,
             };
 
@@ -102,9 +111,14 @@ namespace SlotMachine.Infrastructure.Repository
 
             var data = JsonConvert.SerializeObject(saveLevelRequest);
 
-            Debug.Log(data);
-
             _databaseService.PostLevel(data);
+        }
+
+        public async UniTask UpdateTokens()
+        {
+            var data = JsonConvert.SerializeObject(_localStorageRepository.GetTokens());
+
+            await _databaseService.UpdateTokens("", data);
         }
     }
 }

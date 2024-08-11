@@ -35,7 +35,6 @@ namespace SlotMachine.Business.Domain.Player
                 var spentTime = DateTime.UtcNow - ArrestedAt;
 
                 var isLiftArrest = TimeSpan.FromMinutes(AresstTimeInHours * 60) - spentTime;
-
                 if (isLiftArrest.TotalSeconds <= 0)
                 {
                     IsArrested = false;

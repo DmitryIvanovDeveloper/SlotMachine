@@ -7,6 +7,6 @@ namespace SlotMachine.Infrastructure.Repository.Adapters.Responses
     {
         public int FullRepairInMinutes { get; }
         public int MaxHealth { get; }
-        public List<SlotMachineStateResponse> StatesSlotMachine { get; }
+        public List<SlotMachineStateResponse> States { get; }
     }
 }

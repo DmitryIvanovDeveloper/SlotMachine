@@ -8,6 +8,7 @@ namespace SlotMachine.Business.Adapters
     {
         UniTask<List<LevelDto>> GetLevels();
         void SaveLevel(Settings.Dtos.LevelDto dto);
+        UniTask UpdateTokens();
     }
 }
 

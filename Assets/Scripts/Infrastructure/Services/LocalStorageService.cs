@@ -9,8 +9,8 @@ namespace SlotMachine.Infrastructure.Services
 {
     public class LocalStorageService : ILocalStorageService
     {
-        public delegate int LocalStorage();
-        public event LocalStorage OnUpdated;
+        public delegate int TokensUpdate();
+        public event TokensUpdate OnTokensUpdated;
 
         private Guid _keyAndroid = new Guid("aa859713-bbd2-447a-9c89-9762c93ad8da");
         private static byte[] _tempBytes = new byte[0];
@@ -59,7 +59,7 @@ namespace SlotMachine.Infrastructure.Services
             try
             {
                 PlayerPrefs.SetString(_filePath, JsonConvert.SerializeObject(_tempBytes));
-                OnUpdated?.Invoke();
+                OnTokensUpdated?.Invoke();
             }
             catch (Exception error)
             {
@@ -99,6 +99,7 @@ namespace SlotMachine.Infrastructure.Services
         {
             _sessionData.Tokens = data;
             SaveSessionData();
+            OnTokensUpdated?.Invoke();
         }
 
         public void SaveState(string data)

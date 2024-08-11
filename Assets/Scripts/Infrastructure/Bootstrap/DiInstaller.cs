@@ -31,6 +31,7 @@ using SlotMachine.Business.Domain.Player.UseCases;
 using SlotMachine.Business.Domain.Common.UseCases;
 using SlotMachine.Business.Domain.Police.UseCases;
 using SlotMachine.Infrastructure.Repository;
+using Hare.Infrastructure.Services;
 
 namespace SlotMachine.Infrastructure.Bootstrap
 {
@@ -57,10 +58,10 @@ namespace SlotMachine.Infrastructure.Bootstrap
             Container.Bind(typeof(IHealth), typeof(IHealthInfo)).To<Health>().AsSingle();
             Container.Bind(typeof(IPlayer), typeof(IPlayerInfo)).To<Player>().AsSingle();
 
-            Container.Bind<ILocalStorageRepository>().To<Repository.LocalStorageRepository>().AsSingle();
-            Container.Bind<ILocalStorageService>().To<LocalStorageService>().AsSingle();
-            Container.Bind<IDatabaseService>().To<DatabaseServiceFake>().AsSingle();
-            Container.Bind<IDatabaseRepository>().To<DatabaseRepository>().AsSingle();
+            Container.Bind<ILocalStorageRepository>().To<LocalStorageRepository>().AsTransient();
+            Container.Bind<ILocalStorageService>().To<LocalStorageService>().AsTransient();
+            Container.Bind<IDatabaseService>().To<DatabaseService>().AsTransient();
+            Container.Bind<IDatabaseRepository>().To<DatabaseRepository>().AsTransient();
         }
 
         private void BindEvents()

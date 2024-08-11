@@ -12,7 +12,6 @@ namespace SlotMachine.Infrastructure.Services
 {
     public class DatabaseServiceFake : IDatabaseService
     {
-
         public void SaveCoins(int numCoins)
         {
             throw new System.NotImplementedException();
@@ -62,6 +61,11 @@ namespace SlotMachine.Infrastructure.Services
             levels.Add(data);
 
             PlayerPrefs.SetString("Levels", JsonConvert.SerializeObject(levels));
+        }
+
+        public async UniTask UpdateTokens(string accessToken, string jsonData)
+        {
+            await UniTask.Delay(1000);
         }
     }
 }

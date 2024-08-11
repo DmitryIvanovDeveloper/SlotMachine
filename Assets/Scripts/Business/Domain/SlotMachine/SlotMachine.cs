@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+
 using SlotMachine.Business.Common;
 using SlotMachine.Business.Domain.Coins.UseCases;
 using SlotMachine.Business.Domain.CoinSlot.UseCases;
-using static SlotMachine.Business.Domain.SlotMachine.SlotMachine;
 
 namespace SlotMachine.Business.Domain.SlotMachine
 {

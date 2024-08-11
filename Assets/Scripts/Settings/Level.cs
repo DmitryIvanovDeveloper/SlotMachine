@@ -1,10 +1,10 @@
 ﻿using System;
+using Hare.Infrastructure.Services;
 using SlotMachine.Business.Adapters;
 using SlotMachine.Infrastructure.Repository;
 using SlotMachine.Infrastructure.Services;
 using SlotMachine.Settings.Dtos;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace SlotMachine.Settings
 {
@@ -14,7 +14,7 @@ namespace SlotMachine.Settings
         [field: SerializeField]
         public string LevelId { get; private set; }
 
-        private IDatabaseRepository  _databaseRepository= new DatabaseRepository(new DatabaseServiceFake());
+        private IDatabaseRepository  _databaseRepository = new DatabaseRepository(new DatabaseService(), new LocalStorageRepository(new LocalStorageService()));
 
         [field: SerializeField]
         public int TimeInSeconds { get; private set; }

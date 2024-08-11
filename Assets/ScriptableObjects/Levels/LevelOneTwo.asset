@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <LevelId>k__BackingField: 4b1aa4ee-565d-44cb-85a8-d9a4b0f9137a
   <TimeInSeconds>k__BackingField: 15
-  StartPoliceBeforeEndTimeInSeconds: 10
+  StartPoliceBeforeEndTimeInSeconds: 5
   <SlotMachine>k__BackingField: {fileID: 11400000, guid: e62d74a02bb87470180ed1418ff05025, type: 2}
   <Background>k__BackingField: {fileID: 2800000, guid: 6194577ac79fb5e4fb9a24692cf7801c, type: 3}
   <Preview>k__BackingField: {fileID: 2800000, guid: 851a544fa3b22b44c9602a98b8f6f4ec, type: 3}

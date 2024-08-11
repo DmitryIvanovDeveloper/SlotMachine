@@ -4,7 +4,7 @@ namespace SlotMachine.Business.Domain.Dtos
 {
     public class LevelDto
     {
-        public Guid LevelId { get; set; }
+        public Guid Id { get; set; }
 
         public int TimeInSeconds { get; set; }
 

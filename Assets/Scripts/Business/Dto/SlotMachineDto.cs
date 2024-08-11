@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SlotMachine.Business.Domain.Dtos
 {
     public class SlotMachineDto
     {
+        public Guid Id { get; set; }
+
         public int FullRepairInMinutes { get; set; }
 
         public int MaxHealth { get; set; }
